@@ -17,7 +17,7 @@ import os.path as path
 import habiter_math as habmath
 
 # Constants
-HABITER_VERSION = "1.1.0"
+HABITER_VERSION = "0.1.1"
 HAB_DATE_FORMAT = "%d, %b, %Y %H:%M%p"
 HAB_JSON_FPATH	= "records.json"
 HAB_JSON_IND	= 2
