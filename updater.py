@@ -17,7 +17,7 @@ import os.path as path
 import habiter_math as habmath
 
 # Constants
-HABITER_VERSION = "0.1.1"
+HABITER_VERSION = "0.1.2"
 HAB_DATE_FORMAT = "%d, %b, %Y %H:%M%p"
 HAB_JSON_FPATH	= "records.json"
 HAB_JSON_IND	= 2
@@ -38,10 +38,9 @@ class HabiterUpdater:
 		try:
 			with open(self.fp, 'r') as fh:
 				data = json.load(fh)
-		except json.JSONDecodeError:
-			print(f"[ERROR: UPDATE_HABITER:\t JSON decoding error; \"{HAB_JSON_FPATH}\" may have been tampered with.]")
-		else:
-			# Update last accessed datetime to current time
+
+		# Update current date and version 
+			data["util"]["version"] = HABITER_VERSION
 			data["util"]["last_logged"] = self.date.strftime(HAB_DATE_FORMAT)
 			loggedDate = date.datetime.strptime( data["util"]["last_logged"], HAB_DATE_FORMAT ).date()
 
@@ -54,14 +53,18 @@ class HabiterUpdater:
 					# Has the date stored in this habit object already passed
 					if habitDate < loggedDate:
 						# If so, that means we need to update its information
-						habit["prev_occ"]				= None
-						habit["n_trials"]				+= 1
-						habit["date_info"]["active"]	= False
+						habit["prev_occ"]			= None
+						habit["n_trials"]			+= 1
+						habit["date_info"]["active"] = False
 						habit["avg"] = habmath.running_avg( habit["avg"],
 															habit["occ"],
 															habit["n_trials"])
 						habit["occ"] = 0
-
+		except json.JSONDecodeError:
+			print(f"[INTERNAL_ERR: UPDATE_HABITER:\t JSON decoding error; \"{HAB_JSON_FPATH}\" may have been tampered with.]")
+		except KeyError:
+			print(f"[INTERNAL_ERR: UPDATE_HABITER:\tThere exists at least one key within the record that is no longer accessible.]")
+		else:
 			# Write new data to .json file
 			with open(self.fp, 'w') as fh:
 				json.dump(data, fh, indent=HAB_JSON_IND)
@@ -97,7 +100,6 @@ class HabiterUpdater:
 
 		with open(self.fp, 'w') as fh:
 			json.dump(data, fh, indent=HAB_JSON_IND)
-
 		print(f"[Added {count} \"{key}\" keys into the list \"{listName}\".]")
 
 

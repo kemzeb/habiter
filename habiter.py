@@ -18,13 +18,13 @@ import updater as upt
 
 
 class Habiter:
-	def __init__(self, filePath):
-		self.fp = str(filePath) # property: file path
+	def __init__(self, filePath:str):
+		self.fp = filePath
 
-		# If the specified file does not exist,
-		# create one and store initialized
-		# JSON content for Habiter to function
-		self.create_record(self.fp)
+		# Create a JSON record IFF it does not exist OR contents are empty
+		self.create_record()
+
+		# Update record each time habiter is executed
 		upt.HabiterUpdater(upt.HAB_JSON_FPATH)
 
 
@@ -36,35 +36,30 @@ class Habiter:
 		with open(self.fp, 'r') as fh:
 			data = json.load(fh)
 
-		# Increment occurrence of requested habits
 		for arg in args:
-			argExists = False
-			for habit in data["habits"]:
-				if arg == habit["habit_name"]:
-					argExists = True
-					shellDisplay = "increased to"
+			index = self.search_record_for_habit(arg, data) # search for index matching current habit name
 
-					# Check it the zero CLI flag has been used
-					if numOfOcc == 0:
-						shellDisplay = "remains as"
+			if index != None:
+				# Check it the zero CLI flag has been used
+				if numOfOcc == 0:
+					if data["habits"][index]["occ"] > 0: # Has there already been occ's captured
+						print(f"[ERROR: OCCURRENCE:\tHabit \"{arg}\" contains occurrences.]")
+						continue
 
-						if habit["occ"] > 0: # Has there already been occ's captured
-							print(f"[ERROR: OCCURRENCE:\tHabit \"{arg}\" contains occurrences.]")
-							break
+				# Update habit data
+				data["habits"][index]["prev_occ"]		= data["habits"][index]["occ"] # Capture previous occurrence
+				data["habits"][index]["occ"]			+= numOfOcc 
+				data["habits"][index]["total_occ"] 		+= numOfOcc
 
-					# Update occurrence information
-					habit["prev_occ"]	= habit["occ"] # Capture previous occurrence
-					habit["occ"]		+= numOfOcc 
-					habit["total_occ"] 	+= numOfOcc
-
-					# Update date information
-					habit["date_info"]["last_updated"]	= f"{date.datetime.now().strftime(upt.HAB_DATE_FORMAT)}"
-					habit["date_info"]["active"] = True
-					print("[Habit \"{}\" occurrence {} {}.]".format(arg, shellDisplay, habit["occ"]))
-					break # No duplicates should exist, break
-				
-			if argExists == False:
-				print(f"ERROR: OCCURRENCE:\t[Habit \"{arg}\" does not exist.]")
+				# Update date information
+				data["habits"][index]["date_info"]["last_updated"]	= f"{date.datetime.now().strftime(upt.HAB_DATE_FORMAT)}"
+				data["habits"][index]["date_info"]["active"] 		= True
+			
+				print("[Habit \"{}\" occurrence updated from {} to {}.]".format(arg, 
+																		data["habits"][index]["prev_occ"], 
+																		data["habits"][index]["occ"]))
+			else:
+				print(f"[ERROR: OCCURRENCE:\tHabit \"{arg}\" does not exist.]")
 
 		# Write new data to .json file		
 		with open(self.fp, 'w') as fh:
@@ -112,17 +107,12 @@ class Habiter:
 				print("ERROR: DELETE:\t[Cannot delete from an empty habit list.]")
 			else:
 				for arg in args:
-					argExists = False # Accounts for habit names that do not exist
+					index = self.search_record_for_habit(arg, data)
 
-					for i in range( len(data["habits"]) ):
-						if arg == data["habits"][i]["habit_name"]:
-							argExists = True
-							data["habits"].pop(i)
-
-							print(f"[Habit \"{arg}\" has been deleted.]")
-							break # No duplicates should exist, break
-
-					if argExists == False:
+					if index != None:
+						data["habits"].pop(index) # Remove dict from "habits" list
+						print(f"[Habit \"{arg}\" has been deleted.]")
+					else:
 						print(f"ERROR: DELETE:\t[No habit with the name \"{arg}\".]")
 
 		# Write new data to .json file
@@ -136,17 +126,12 @@ class Habiter:
 			data = json.load(fh)
 
 		for arg in args:
-			argExists = False # Accounts for habit names that do not exist
-
-			for i in range( len(data["habits"]) ):
-				if arg == data["habits"][i]["habit_name"]:
-					argExists = True
-					data["habits"][i] = json.loads( self.init_habit_str(arg) )
-
-					print(f"[Habit \"{arg}\" has been reset.]")
-					break # No duplicates should exist, break
-
-			if argExists == False:
+			index = self.search_record_for_habit(arg, data)
+			
+			if index != None:
+				data["habits"][index] = json.loads( self.init_habit_str(arg) ) 
+				print(f"[Habit \"{arg}\" has been reset.]")
+			else:
 				print(f"ERROR: RESET:\t[No habit with the name \"{arg}\".]")
 
 		with open(self.fp, 'w') as fh:
@@ -196,8 +181,12 @@ class Habiter:
 	# Helper Methods
 	##
 
+	# Returns an index of the first found dict, else None
+	def search_record_for_habit(self, key, data):
+		return next( (i for i, habit in enumerate(data["habits"]) if habit["habit_name"] == key), None)
 
-	def create_record(self, filePath):
+
+	def create_record(self):
 		# If the file does not exist or is empty
 		if not path.isfile(self.fp) or os.stat(self.fp).st_size <= 0:
 			# Initalize JSON arrays to hold JSON objects
@@ -207,7 +196,7 @@ class Habiter:
 							}}, 
 							"habits": []}}'''
 
-			with open(filePath, 'w') as fh:
+			with open(self.fp, 'w') as fh:
 				pyObj =json.loads(fileLists) 	# Create python object
 				json.dump(pyObj, fh, indent=upt.HAB_JSON_IND) 	# Convert to JSON and store into .json file
 

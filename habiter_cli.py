@@ -8,14 +8,20 @@ import argparse
 from os import path
 
 # User-defined modules
+import updater as upt
 from habiter import Habiter
 
 
 def exe_using_args(hab, args:argparse.Namespace):
-	if args.func != None: # Check if system arguments were inputted
-		args.func(hab, args)
+	args.func(hab, args)
 
-## Functions below are used for the set_defaults() method 
+
+## Functions below are used for the set_defaults() method utilized during argument parsing
+def main_cl(hab, args:argparse.Namespace):
+	if args.version:
+		print(f"Habiter v{upt.HABITER_VERSION}")
+
+
 def occ(hab, args:argparse.Namespace):	
 	if args.num:
 		hab.occurrence(args.habits, args.num)
@@ -53,8 +59,13 @@ def create_parser():
 			formatter_class= argparse.RawTextHelpFormatter,
 			description="Quantifies and keeps tabs on unwanted habits you have \ndeveloped over time.",
 			epilog='''For more information about these commands, visit the \ncode repository at https://github.com/kemzeb/habiter.''')
+	# Subparser for subcommnads
 	sub_parser = parser.add_subparsers(dest="subcom")
-	parser.set_defaults(func=None)
+
+	# Main parser optional arguments
+	parser.add_argument("--version",
+						action="store_true")
+	parser.set_defaults(func=main_cl)
 
 	# Subparser parent for parsers that require a collection of habits as argument
 	parent_parser = argparse.ArgumentParser(add_help=False)
