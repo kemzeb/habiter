@@ -1,7 +1,12 @@
-# habiter
+<p align="center">
+<img src="docs/img/HABITER.jpg"> 
+</p>
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 habiter is a work-in-progress program that quantifies and keeps track of unwanted habits you have developed over time. It exists and is interacted with in a place where all programmers or simple travelers within the world of computing feel most comfortable in: the shell.
 
-It essentially addresses the problem we have of ridding ourselves of bad habits by making it out in the open for us to see explicitly by essentially tracking the number of occurrences we notice with our habits per day. This data can then be viewed at any time as well manipulated by Habiter in certain ways to provide better insight into these habits.
+It essentially addresses the problem we have of ridding ourselves of bad habits by making it out in the open for us to see explicitly by essentially tracking the number of occurrences we notice with our habits per day. This data can then be viewed at any time as well manipulated by Habiter with particular math concepts (i.e Possion approximation, average percent change, etc.) to provide better insight into these habits.
 
 ## Installation
 Currently, habiter can only be interacted with by __cloning the repository__. Afterwards you should be all set, assuming you are using Python v3.8.3. See below for CLI usage explanations. 
@@ -14,7 +19,7 @@ Every interaction is dependent on the following shell command (assuming 'python3
 
 __Note that__ this command is executed within the repo's root directory.
 
-Everything else besides this is essentially system arguments that are parsed and interpreted thanks to the `argparse` module. Each time this command is called, no matter what else is passed into it (i.e. subcommands), a `Habiter` object is created to facilitate JSON R/W behavior along with a `HabiterUpdater` object that updates the JSON file depending on user activity. Now let's take a look into the following subcommands offered:
+Everything else besides this is essentially system arguments that are parsed and interpreted thanks to the `argparse` module. Each time this command is called, no matter what else is passed into it (i.e. subcommands, options), a `Habiter` object is created to facilitate JSON R/W behavior along with a `HabiterUpdater` object that updates the JSON file depending on user activity. Now let's take a look into the following subcommands offered:
 ```
 python3 hab.py -h
 usage: hab.py [-h] {occ,add,del,reset,list} ...
@@ -32,16 +37,17 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
+  --version
   ```
 This is what is printed out after the `-h` option is requested. We will analyze each subcommand found above and any of its optional arguments.
 
-`occ` subcommand allows for the incrementation of the occurrence of one or more habits that exists within the data. It keeps track of daily and total habit occurrence day by day. It holds the following optional arguments:
+`occ` subcommand allows for the incrementation of the occurrence of one or more habits that exists within the data. It keeps track of daily and total habit occurrence day by day. It holds the following options:
 * `-z, --zero` for informing habiter that you have had no occurrences for that day for some habit(s)
 * `-n [1-100], --num [1-100]` for providng a particular number of occurrence for that day for some habit(s) (__please note that__ it applies to all habits that you currently inputted)
 
 __Note that__ these two arguments are __mutually exlcusive__.
 
-The reason why the first argument exists in the first place is because habiter has no way of telling whether a habit that has __zero occurrences__ has been recently active, has never been active before, or has been inactive for a while. `-z, --zero` simply informs habiter that this or a collection of particular habits should be considered `active` on that day. __If you add onto the occurrences__ in any way afterwards you won't find any trouble, however the first argument may __no longer be used__ for that day.
+The reason why the first argument exists in the first place is because habiter has no way of telling whether a habit that has __zero occurrences__ has been recently active, has never been active before, or has been inactive for a while. `-z, --zero` simply informs habiter that this or a collection of particular habits should be considered `active` on that day. __If you add onto the occurrences__ in any way afterwards you won't find any trouble, however this argument may __no longer be used__ for that day.
 #
 `add` subcommand allows for the addition of one or more habits into the data. Any duplicated habit names provided is ignored and/or prints an error. It initalizes all of its corresponding genereated data to a default state.
 #
@@ -70,6 +76,7 @@ Habit + Attributes	      Value
 ## Essential To Do's
 * Implement statistical concepts that works nicely with the data under consideration
 * Make implementations more 'pythonic'
-* Provide explanations of math concepts that was utilized
+* Provide explanations of math concepts that is/will be utilized
 * Make the CLI globally-accessible
+* Package habiter using pip
 * Automate testing procedures
