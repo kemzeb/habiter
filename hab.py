@@ -1,21 +1,20 @@
 '''
-'	hab.py
+'   hab.py
 '
-'	Main program for Habiter
+'   Main program for habiter
 '
 '''
 import argparse
 
 import habiter_cli as cli
-import updater as upt
-from habiter import Habiter
 
+from habiter import Habiter
+from updater import HAB_JSON_FPATH
 
 def main():
-	parser = cli.create_parser()
-	args = parser.parse_args() # parse sys args
-	cli.exe_using_args( Habiter(upt.HAB_JSON_FPATH), args )
+    parser = cli.create_parser()
+    cli.exe_using_parser(Habiter(HAB_JSON_FPATH), parser)
 
 
 if __name__ == "__main__":
-	main()
+    main()
