@@ -1,17 +1,19 @@
 '''
-'   habiter_cli.py
+'   cli.py
 '
 '   Command line interface for Habiter
+'
+'   The to-be-parsed commands and options
+'   below maybe moved in the future to their
+'   own corresponding modules.
 '''
 import argparse
 import sys
 
 from os import path
 
-# User-defined modules
-from habiter import Habiter
+from habiter.commands.habiter import Habiter
 
-HABITER_CLI_USAGE = ''
 
 def exe_using_parser(hab, parser:argparse.Namespace):
     '''Parses command line arguments and uses a 'Habiter' instance to act upon them
@@ -31,17 +33,20 @@ def exe_using_parser(hab, parser:argparse.Namespace):
 #  utilized during argument parsing
 def main_cl(hab, args:argparse.Namespace):
     if args.version:
-        from updater import HABITER_VERSION
+        from habiter.upkeep.updater import HABITER_VERSION
         print(f"habiter v{HABITER_VERSION}")
 
+    if args.set_record:
+        hab.set_record("records.json")
 
-def occ(hab, args:argparse.Namespace):  
+
+def tally(hab, args:argparse.Namespace):  
     if args.num:
-        hab.occurrence(args.habits, args.num)
+        hab.tally_habits(args.habits, args.num)
     elif args.zero:
-        hab.occurrence(args.habits, 0)
+        hab.tally_habits(args.habits, 0)
     else:
-        hab.occurrence(args.habits)
+        hab.tally_habits(args.habits)
 
 
 def add(hab, args:argparse.Namespace):
@@ -73,11 +78,15 @@ def create_parser():
             description="Quantifies and keeps tabs on unwanted habits you have \ndeveloped over time.",
             epilog='''For more information, visit the code repository\nat https://github.com/kemzeb/habiter.''')
     # Subparser for subcommnads
-    sub_parser = parser.add_subparsers(title="subcommands", dest="subcom")
+    sub_parser = parser.add_subparsers(#title="subcommands" 
+                                    dest="subcom")
 
     # Main parser optional arguments
     parser.add_argument("--version",
                         action="store_true")
+    parser.add_argument("-s", "--set_record",
+                        action="store_true",
+                        help="set a new file path for your habit data")
     parser.set_defaults(func=main_cl)
 
     # Subparser parent for parsers that require a collection of habits as argument
@@ -86,12 +95,12 @@ def create_parser():
                                 type=str,
                                 nargs="+",
                                 help="provide a single or a collection of habits")
-    ## Parser for occurrence feature
-    occ_parser = sub_parser.add_parser("occ", 
+    ## Parser for tally feature
+    occ_parser = sub_parser.add_parser("tally", 
                                         parents=[parent_parser],
                                         formatter_class= argparse.RawTextHelpFormatter,
-                                        description="Allows for the occurrence incremenation of habits.\nSpecify the '-z/--zero' flag to inform Habiter that\nyou did not have any occurrences for a particular \nday.", 
-                                        help="increment occurrence for habit(s)")
+                                        description="Increments the number of occurrences for some habit(s).\nSpecify the '-z/--zero' flag to inform Habiter that\nyou did not have any occurrences for a particular \nday.", 
+                                        help="increment tally for some habit(s)")
     
     # Group flags as they cannot share outcomes
     # Note that the 'help' strings below must
@@ -100,15 +109,15 @@ def create_parser():
     group = occ_parser.add_mutually_exclusive_group()
     group.add_argument("-z", "--zero", 
                         action="store_true",
-                        help='''inform Habiter that you had no occurrences for some habit(s)
-(more importantly informs that some habit(s) is/are active)''')
+                        help="""inform habiter that you had no occurrences for some habit(s) \
+                        \n(more importantly informs that some habit(s) is/are active)""")
     group.add_argument("-n", "--num", 
                         type=int, 
                         choices=range(1, 100), 
                         metavar="[0-100]",
                         help='''provide a specific # of occurrences (note that 
 this will apply to all habits inputted)''')
-    occ_parser.set_defaults(func=occ)
+    occ_parser.set_defaults(func=tally)
 
     ## Parser for add habits feature
     parser_add = sub_parser.add_parser("add", 

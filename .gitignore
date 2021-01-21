@@ -1,4 +1,18 @@
-__pycache__
+# Mac
 .DS_Store
-.pyc
+
+# Python
+__pycache__
+*.pyc
+
+# habiter
 records.json
+
+# Distribution 
+/build/
+/dist/
+*.egg
+*.eggs
+*.egg-info/
+MANIFEST
+/env    

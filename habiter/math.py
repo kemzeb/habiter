@@ -1,8 +1,8 @@
 '''
-'   habiter_math.py
+'   math.py
 '
 '   Provides stat and other mathematical
-'   functions for Habiter to work with
+'   functions for habiter to work with
 '
 '''
 
@@ -44,7 +44,7 @@ def avg_percent_delta(avg1:float, avg2:float, time=1):
     try:
         return (((avg2 - avg1) / avg1) * (1 / time)) * 100
     except ZeroDivisionError:
-        print("[INTERNAL_ERROR: AVG_PER_DELTA: Division by zero.]") 
+        print("[Error: Division by zero.]") 
         sys.exit(1)
 
 
@@ -52,10 +52,11 @@ def avg(summation, nTrials:int):
     try:
         return summation / nTrials
     except ZeroDivisionError:
-        print("[INTERNAL_ERROR: AVG: Division by zero.]") 
+        print("[Error: Division by zero.]") 
         sys.exit(1)
 
 
+# Unused function, needs to be tested
 def running_avg(avg, newVal, nTrials):
     old_avg = avg * (nTrials-1)
     return old_avg + ( (newVal - old_avg) / nTrials )

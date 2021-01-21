@@ -7,45 +7,51 @@
 '   compatibility
 '''
 
-# NOTE: ensure standard datetime format
-
 import json
 import sys
 import datetime as date
-import os.path as path
+import os
 
-import habiter_math as habmath
+import habiter.math as habmath
 
-# Constants
-HABITER_VERSION = "0.2.0"
-HAB_DATE_FORMAT = "%d, %b, %Y %H:%M%p"
-HAB_JSON_FPATH  = "records.json"
-HAB_JSON_IND    = 2
+from habiter.utils.messenger import (
+    display_wrap_message, 
+    display_error_message, 
+    display_internal_error_message
+)
+
+
+HABITER_VERSION     = "1.0.2-rc.4"
+HAB_DATE_FORMAT     = "%d, %b, %Y %H:%M%p"
+HAB_JSON_IND        = 2
 
 
 class HabiterUpdater:
-    def __init__(self, filePath):
+    def __init__(self, filePath:str):
         self.fp = filePath
         self.date = date.datetime.now()
 
-        self.update_habiter()
+        self.create_record() # Ensures the record file can be communicated with
+        self.update_habiter() # Updates habiter when needed
 
 
-    # Note that this method simply ignores inactivity of Habiter and updates where it left off
     def update_habiter(self):
-        ''' Updates habit data based on user activity
+        ''' updater_habiter() -> None
+        Updates habit data based on user activity
 
         This method will update all the habit data if it detects
         that the date it was last logged has passed a certain
         wait period (i.e. if a day has passed). It updates just once
         and waits for habiter to be exectued once again that will meet
-        the target condtion mentioned.
+        this target condtion.
 
-        Parameters (to be considered for implementation)
+        Note that it will update the following keys if needed:
+            prev_occ    n_trials
+            active      avg
+            occ
 
-            waitPeriod:     quantity that represents the amount of time 
-                            before Habiter updates habit data 
-            unit:           unit of time (i.e. seconds, hours, days)
+        The following is always updated upon execution:
+            version     last_logged
         '''
 
         try:
@@ -64,7 +70,7 @@ class HabiterUpdater:
             # Else habit data has NOT been updated
             else:
                 # Inform end user when habiter was last accessed AND update last logged to now
-                print("\n[Habiter] Last accessed: {}\n".format(data["util"]["last_logged"]))
+                print("\n[habiter] Last accessed: {}\n".format(data["util"]["last_logged"]))
                 data["util"]["last_logged"] = self.date.strftime(HAB_DATE_FORMAT)
             
                 # Compare present date to each last updated habit 
@@ -83,20 +89,16 @@ class HabiterUpdater:
                                                         habit["n_trials"])
                             habit["occ"] = 0
         except json.JSONDecodeError:
-            print(f"[INTERNAL_ERR: UPDATE_HABITER: JSON decoding error; \"{HAB_JSON_FPATH}\" may have been tampered with.]")
+            display_internal_error_message(f"JSON decoding error; Habit data file at \"{self.fp}\" may have been tampered with.")
             sys.exit(1)
         except KeyError:
-            print(f"[INTERNAL_ERR: UPDATE_HABITER: There exists at least one key within the record that is no longer accessible.]")
+            display_internal_error_message(f"There exists at least one key within the record that is no longer accessible.")
             sys.exit(1)
+        
         else:
             # Write new data to .json file
             with open(self.fp, 'w') as fh:
                 json.dump(data, fh, indent=HAB_JSON_IND)
-
-
-    # This method may be used in the future to aid in backwards compatibility
-    def check_version(self):
-        raise NotImplementedError
 
 
     ##
@@ -104,7 +106,28 @@ class HabiterUpdater:
     ##
 
 
-    def add_key_into_list_dicts(self, listName:str, key:str, initVal=None):
+    def create_record(self):
+        '''
+            Creates a record if the specified file path either
+            does NOT exist OR does exist and is empty
+        '''
+        if not os.path.isfile(self.fp) or os.stat(self.fp).st_size <= 0:
+            # Initalize JSON arrays to hold JSON objects
+            initFileContents = {
+                        "util": {
+                         "version": HABITER_VERSION,
+                         "last_logged": date.datetime.now().strftime(HAB_DATE_FORMAT)
+                        },
+                        "habits": []
+                        }
+
+            with open(self.fp, 'w') as fh:
+                json.dump(initFileContents, fh, indent=HAB_JSON_IND)
+
+
+#---- Private helper methods; used for manipualting habit metadata organization
+#-- Will be moved to different module that handles backwards compatibility
+    def _add_key_into_list_dicts(self, listName:str, key:str, initVal=None):
         count = 0
 
         with open(self.fp, 'r') as fh:
@@ -112,7 +135,7 @@ class HabiterUpdater:
 
         # Does the list exist
         if listName not in data:
-            print(f"[ERROR: ADD_KEY FROM LIST: The list \"{listName}\" does not exist within the record.]")
+            print(f"[internal_err: ADD_KEY]  The list \"{listName}\" does not exist within the record.")
             return
 
         # Add keys if they don't already exist
@@ -121,14 +144,14 @@ class HabiterUpdater:
                 obj[key] = initVal
                 count += 1
             else:
-                print(f"[ERROR: ADD_KEY INTO LIST: Key with the name \"{key}\" already exists.]")
+                print(f"[err: ADD_KEY]  Key with the name \"{key}\" already exists.")
 
         with open(self.fp, 'w') as fh:
             json.dump(data, fh, indent=HAB_JSON_IND)
-        print(f"[Added {count} \"{key}\" keys into the list \"{listName}\".]")
+        print(f"[habiter]  Added {count} \"{key}\" keys into the list \"{listName}\".")
 
 
-    def del_key_from_list_dicts(self, listName:str, key:str):
+    def _del_key_from_list_dicts(self, listName:str, key:str):
         count = 0
 
         with open(self.fp, 'r') as fh:
@@ -136,7 +159,7 @@ class HabiterUpdater:
 
         # Does the list exist
         if listName not in data:
-            print(f"[ERROR: DEL_KEY FROM LIST: The list \"{listName}\" does not exist within the record.]")
+            print(f"[internal_err: DEL_KEY]  The list \"{listName}\" does not exist within the record.")
             return
 
         # Delete keys if they haven't already been deleted
@@ -145,9 +168,9 @@ class HabiterUpdater:
                 obj.pop(key)
                 count += 1
             else:
-                print(f"[ERROR: DEL_KEY FROM LIST: No key with the name \"{key}\".]")
+                print(f"[err: DEL_KEY]  No key with the name \"{key}\".")
 
         # Write new data to .json file
         with open(self.fp, 'w') as fh:
             json.dump(data, fh, indent=HAB_JSON_IND)
-        print(f"[Deleted {count} \"{key}\" keys from the list \"{listName}\".]")
+        print(f"[habiter]  Deleted {count} \"{key}\" keys from the list \"{listName}\".")
