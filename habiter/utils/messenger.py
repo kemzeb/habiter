@@ -4,12 +4,14 @@
     console.
 
 '''
-import textwrap 
+import textwrap
 
 
-def display_message(text:str, addHeader=True):
-    header = "[habiter]  " if addHeader is True else ""
-    print(f"{header}{text}")
+def display_message(text:str):
+    if len(text) != 0 and text[0] == '\n':
+        #...ignore newlines
+        text = text[1:]
+    print(f"[habiter]  {text}")
 
 
 def display_error_message(text:str):
@@ -25,7 +27,8 @@ def display_wrap_message(text:str, addHeader=True):
 
     Uses the textwrap public method 'fill' to return
     a wrapped string given the arguments provided
-    in its initialization
+    in its initialization. Definitely needs working
+    on
     '''
     header = "[habiter]" if addHeader is True else ""
     print(f"{header} " + textwrap.fill(text,

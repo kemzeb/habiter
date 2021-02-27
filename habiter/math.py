@@ -23,7 +23,7 @@ def neumaier_sum(summ, val):
 def avg_percent_delta(avg1:float, avg2:float, time=1):
     ''' Computes the average percent change
         for some function of time, expressed
-        as a percentage (though it returns a 
+        as a percentage (though it returns a
         float value)
         So,
             avg2 - avg1      1
@@ -37,14 +37,14 @@ def avg_percent_delta(avg1:float, avg2:float, time=1):
     Parameters
         avg1:   the old average
         avg2:   the new average
-        time:   an int value for a function of 
-                time (by default is one for 'one 
+        time:   an int value for a function of
+                time (by default is one for 'one
                 day')
     '''
     try:
         return (((avg2 - avg1) / avg1) * (1 / time)) * 100
     except ZeroDivisionError:
-        print("[Error: Division by zero.]") 
+        print("[Error: Division by zero.]")
         sys.exit(1)
 
 
@@ -52,7 +52,7 @@ def avg(summation, nTrials:int):
     try:
         return summation / nTrials
     except ZeroDivisionError:
-        print("[Error: Division by zero.]") 
+        print("[Error: Division by zero.]")
         sys.exit(1)
 
 

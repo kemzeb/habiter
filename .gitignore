@@ -8,11 +8,14 @@ __pycache__
 # habiter
 records.json
 
-# Distribution 
+# Distribution
 /build/
 /dist/
 *.egg
 *.eggs
 *.egg-info/
 MANIFEST
-/env    
+/env
+
+# Designs
+*.drawio

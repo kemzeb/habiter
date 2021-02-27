@@ -12,7 +12,6 @@ from habiter.commands.habiter import Habiter
 
 def main():
     parser = cli.create_parser()
-
     cli.exe_using_parser(Habiter(), parser)
 
 

@@ -14,12 +14,21 @@ setuptools.setup(
     author="Kemal Zebari",
     url="https://github.com/kemzeb/habiter",
     license="MIT",
+    keywords= (
+        "productivity",
+        "cli"
+    ),
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=setuptools.find_packages(),
     package_data = {
         "habiter.data": ["trace.txt"],
     },
+
+    install_requires=(
+        'appdirs'
+    ),
+
     entry_points= {
         "console_scripts": [
             "habiter=habiter.run:main"
