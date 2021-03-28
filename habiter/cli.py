@@ -20,7 +20,7 @@ def exe_using_parser(hab, parser:argparse.Namespace):
     '''Parses command line arguments and uses a 'Habiter' instance to act upon them
     Parameters
         hab:    a Habiter instance
-        parser: an ArugmentParser instance
+        parser: an ArgumentParser instance
     '''
     args = parser.parse_args() # parse sys args
 
@@ -34,7 +34,7 @@ def exe_using_parser(hab, parser:argparse.Namespace):
 #  utilized during argument parsing
 def main_cl(hab, args:argparse.Namespace):
     if args.version:
-        from habiter.upkeep.updater import HABITER_VERSION
+        from habiter.utils.constants import HABITER_VERSION
         print(f"habiter v{HABITER_VERSION}")
 
 

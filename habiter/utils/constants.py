@@ -3,7 +3,7 @@ from appdirs import user_data_dir
 
 # General
 HABITER_VERSION     = "0.3.1"
-HAB_DATE_FORMAT     = "%d, %b, %Y %H:%M%p"
+HAB_DATE_FORMAT     = "%d %b, %Y %H:%M%p"
 HAB_JSON_IND        = 2
 
 # Data retrieval
@@ -15,4 +15,4 @@ HAB_DIR_FPATH       = user_data_dir(HAB_NAME, HAB_AUTHOR)
 
 HAB_DEFAULT_FPATH   = user_data_dir()
 HAB_TRACE_FPATH     = os.path.join(HAB_DIR_FPATH, HAB_FDATA)
-#.. full path with user habit data inlcuded
+#.. full path with user habit data included
