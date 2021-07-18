@@ -1,7 +1,7 @@
 import os
 import setuptools
 
-from habiter.upkeep.updater import HABITER_VERSION
+from habiter.internal.utils.consts import HABITER_VERSION
 
 directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(directory, 'README.md'), encoding='utf-8') as f:
@@ -31,7 +31,7 @@ setuptools.setup(
 
     entry_points= {
         "console_scripts": [
-            "habiter=habiter.run:main"
+            "habiter=habiter.internal.run:main"
         ]
     },
     classifiers = [

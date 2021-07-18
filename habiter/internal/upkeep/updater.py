@@ -9,18 +9,16 @@ import sys
 import datetime as date
 import os
 
-import habiter.math as habmath
+import habiter.internal.math as habmath
 
-from habiter.utils.messenger import (
+from habiter.internal.utils.messenger import (
     display_message,
-    display_error_message,
     display_internal_error_message
 )
-from habiter.utils.constants import (
+from habiter.internal.utils.consts import (
     HAB_AUTHOR,     #..here to will handle Windows file structure... yuck
     HAB_DIR_FPATH,
     HAB_TRACE_FPATH,
-    HAB_FDATA,
     HABITER_VERSION,
     HAB_DEFAULT_FPATH,
     HAB_DATE_FORMAT,

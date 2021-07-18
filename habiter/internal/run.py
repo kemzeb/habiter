@@ -3,11 +3,10 @@
 '''
 '   Main program for habiter
 '''
-import argparse
 
-import habiter.cli as cli
+import habiter.internal.cli as cli
 
-from habiter.commands.habiter import Habiter
+from habiter.internal.habiter import Habiter
 
 
 def main():

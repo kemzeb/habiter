@@ -10,10 +10,7 @@
 import argparse
 import sys
 
-from os import path
-
-from habiter.utils.messenger import display_error_message
-from habiter.commands.habiter import Habiter
+from habiter.internal.utils.messenger import display_error_message
 
 
 def exe_using_parser(hab, parser:argparse.Namespace):
@@ -34,7 +31,7 @@ def exe_using_parser(hab, parser:argparse.Namespace):
 #  utilized during argument parsing
 def main_cl(hab, args:argparse.Namespace):
     if args.version:
-        from habiter.utils.constants import HABITER_VERSION
+        from habiter.internal.utils.consts import HABITER_VERSION
         print(f"habiter v{HABITER_VERSION}")
 
 
