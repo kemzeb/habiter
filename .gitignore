@@ -3,6 +3,7 @@
 
 # IDE-related
 .vscode
+.idea/
 
 # Python
 __pycache__
@@ -13,7 +14,7 @@ records.json
 records.db
 
 # Vitrual environment
-env/
+venv/
 
 # Distribution
 build/
