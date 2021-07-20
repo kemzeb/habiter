@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-'''
-'   Main program for habiter
-'''
+"""
+'   The entry point of habiter
+"""
 
 import habiter.internal.cli as cli
 

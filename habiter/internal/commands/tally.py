@@ -4,7 +4,7 @@ import click
 
 from habiter.internal.commands.utils import search_record_for_habit
 from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_JSON_IND, HAB_DATE_FORMAT
-from habiter.internal.utils.messenger import display_error_message, display_message
+from habiter.internal.utils.messenger import echo_failure, echo_success, echo_warning
 
 
 @click.command(short_help='reset some habit(s) from record')
@@ -25,7 +25,7 @@ def tally(habits, num, zero):
         if index is not None:
             # Check it the '--zero' flag has been used and has there already been tallies captured
             if zero and data["habits"][index]["occ"] > 0:
-                display_error_message(f"Habit \"{arg}\" contains occurrences.")
+                echo_failure(f"Habit \"{arg}\" contains occurrences.")
                 continue
 
             # Update habit data
@@ -40,11 +40,11 @@ def tally(habits, num, zero):
 
             data["habits"][index] = habit
 
-            display_message("Habit \"{}\" tally updated from {} to {}.".format(arg,
-                                                                               habit["prev_occ"],
-                                                                               habit["occ"]))
+            echo_success("Habit \"{}\" tally updated from {} to {}.".format(arg,
+                                                                            habit["prev_occ"],
+                                                                            habit["occ"]))
         else:
-            display_error_message(f"Habit \"{arg}\" does not exist.")
+            echo_failure(f"Habit \"{arg}\" does not exist.")
 
     # Write new data to .json file
     with open(HAB_TRACE_FPATH, 'w') as fh:

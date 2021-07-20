@@ -4,46 +4,36 @@
     console.
 
 '''
-import textwrap
+import click
 
 
-def display_message(text:str):
-    if len(text) != 0 and text[0] == '\n':
-        #...ignore newlines
-        text = text[1:]
-    print(f"[habiter]  {text}")
+def echo_success(text: str):
+    click.secho(f"[habiter]  {text}", fg='cyan', bold=True)
 
 
-def display_error_message(text:str):
-    print(f"[habiter: error]  {text}")
+def echo_failure(text: str):
+    click.secho(f"[habiter: error]  {text}", fg='red', bold=True)
 
 
-def display_internal_error_message(text:str):
-    print(f"[habiter: internal_error]  {text}")
+def echo_internal_failure(text: str):
+    click.secho(f"[habiter: internal_error]  {text}", fg='red', bold=True)
 
 
-def display_wrap_message(text:str, addHeader=True):
-    ''' wrap_message_normal(text : string) -> None
-
-    Uses the textwrap public method 'fill' to return
-    a wrapped string given the arguments provided
-    in its initialization. Definitely needs working
-    on
-    '''
-    header = "[habiter]" if addHeader is True else ""
-    print(f"{header} " + textwrap.fill(text,
-                            width = 70,
-                            initial_indent = "\t",
-                            subsequent_indent = "\t\t") )
+def echo_warning(text: str):
+    click.secho(f"[habiter]  {text}", fg='yellow', bold=True)
 
 
-def inquire_choice(choice:str):
-    display_message(f"Are you sure you want to {choice}? This cannot be undone.\n")
+def echo_info(text: str):
+    click.secho(f"[habiter]  {text}", bold=True)
+
+
+def inquire_choice(choice: str) -> bool:
+    echo_info(f"Are you sure you want to {choice}? This cannot be undone.")
     ans = ''
     while True:
         ans = input("[Provide a y/n.]: ")
 
         if ans != "y" and ans != "n":
-            print("[err: INQUIRE_CHOICE] Please try again.")
+            echo_warning("Please try again.")
         else:
             return True if ans == 'y' else False

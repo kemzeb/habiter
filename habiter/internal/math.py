@@ -1,10 +1,10 @@
-'''
+"""
 '   math.py
 '
 '   Provides stat and other mathematical
 '   functions for habiter to work with
 '
-'''
+"""
 
 ## NOTE: the math will need to be approved and documented, but for
 # now squaring away implementations is priority
@@ -15,13 +15,15 @@
 import math
 import sys
 
+from habiter.internal.utils.messenger import echo_failure
+
 
 def neumaier_sum(summ, val):
     raise NotImplementedError
 
 
 def avg_percent_delta(avg1:float, avg2:float, time=1):
-    ''' Computes the average percent change
+    """ Computes the average percent change
         for some function of time, expressed
         as a percentage (though it returns a
         float value)
@@ -40,11 +42,11 @@ def avg_percent_delta(avg1:float, avg2:float, time=1):
         time:   an int value for a function of
                 time (by default is one for 'one
                 day')
-    '''
+    """
     try:
         return (((avg2 - avg1) / avg1) * (1 / time)) * 100
     except ZeroDivisionError:
-        print("[Error: Division by zero.]")
+        echo_failure("Division by zero.")
         sys.exit(1)
 
 
@@ -52,7 +54,7 @@ def avg(summation, nTrials:int):
     try:
         return summation / nTrials
     except ZeroDivisionError:
-        print("[Error: Division by zero.]")
+        echo_failure("Division by zero.")
         sys.exit(1)
 
 
@@ -63,12 +65,12 @@ def running_avg(avg, newVal, nTrials):
 
 
 def poisson_prob(lmda, x:int):
-    ''' Computes the probability for a discrete random
+    """ Computes the probability for a discrete random
         variable using the Poisson probability
     Parameters
         lmda:   the lambda parameter
         x:      a discete event that is observed (i.e. for occurrence(s))
-    '''
+    """
     return (math.e) ** (-lmda) * ( (lmda**x) / math.factorial(x) )
 
 

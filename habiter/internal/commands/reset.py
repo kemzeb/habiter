@@ -4,7 +4,7 @@ import json
 
 from habiter.internal.commands.utils import search_record_for_habit, init_habit
 from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_JSON_IND
-from habiter.internal.utils.messenger import inquire_choice, display_message, display_error_message
+from habiter.internal.utils.messenger import inquire_choice, echo_success, echo_failure
 
 
 @click.command(short_help='reset some habit(s) from record')
@@ -28,9 +28,9 @@ def reset(habits):
             dateAdded = data["habits"][index]["date_info"]["date_added"]
             data["habits"][index] = init_habit(arg, dateAdded)
 
-            display_message(f"Habit \"{arg}\" has been reset.")
+            echo_success(f"Habit \"{arg}\" has been reset.")
         else:
-            display_error_message(f"No habit with the name \"{arg}\".")
+            echo_failure(f"No habit with the name \"{arg}\".")
 
     with open(HAB_TRACE_FPATH, 'w') as fh:
         json.dump(data, fh, indent=HAB_JSON_IND)

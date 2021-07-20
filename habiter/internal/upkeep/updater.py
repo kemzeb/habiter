@@ -1,8 +1,8 @@
-'''
+"""
 '   updater.py
 '
 '   Handles updating user habit data
-'''
+"""
 
 import json
 import sys
@@ -12,8 +12,7 @@ import os
 import habiter.internal.math as habmath
 
 from habiter.internal.utils.messenger import (
-    display_message,
-    display_internal_error_message
+    echo_internal_failure, echo_info
 )
 from habiter.internal.utils.consts import (
     HAB_AUTHOR,
@@ -30,9 +29,8 @@ class HabiterUpdater:
     def __init__(self):
         self.date = date.datetime.now()
 
-        self.create_record() # Ensures user habit data to communicate with
-        self.update_habiter() # Updates habiter when needed
-
+        self.create_record()  # Ensures user habit data to communicate with
+        self.update_habiter()  # Updates habiter when needed
 
     def update_habiter(self):
         """
@@ -60,8 +58,8 @@ class HabiterUpdater:
             # Update current date and version
             data["util"]["version"] = HABITER_VERSION
 
-            loggedTime  = date.datetime.strptime( data["util"]["last_logged"],
-                                HAB_DATE_FORMAT ).date()
+            loggedTime = date.datetime.strptime(data["util"]["last_logged"],
+                                                HAB_DATE_FORMAT).date()
             presentTime = date.datetime.now().date()
 
             # Check if habit data has been updated
@@ -70,7 +68,7 @@ class HabiterUpdater:
             # Else habit data has NOT been updated
             else:
                 # Inform end user when habiter was last accessed AND update last logged to now
-                display_message("Last accessed: {}\n".format(data["util"]["last_logged"]))
+                echo_info("Last accessed: {}\n".format(data["util"]["last_logged"]))
                 data["util"]["last_logged"] = self.date.strftime(HAB_DATE_FORMAT)
 
                 # Compare present date to each last updated habit
@@ -78,29 +76,29 @@ class HabiterUpdater:
                     # Has the habit been recently active
                     if habit["date_info"]["active"] is True:
                         habitDate = date.datetime.strptime( \
-                        habit["date_info"]["last_updated"], HAB_DATE_FORMAT ).date()
+                            habit["date_info"]["last_updated"], HAB_DATE_FORMAT).date()
 
                         # Has the date stored in this habit object already passed
                         if habitDate < presentTime:
                             # If so, that means we need to update its information
-                            habit["prev_occ"]           = None
-                            habit["n_trials"]           += 1
+                            habit["prev_occ"] = None
+                            habit["n_trials"] += 1
                             habit["date_info"]["active"] = False
-                            habit["avg"] = habmath.avg( habit["total_occ"],
-                                                        habit["n_trials"])
+                            habit["avg"] = habmath.avg(habit["total_occ"],
+                                                       habit["n_trials"])
                             habit["occ"] = 0
         except json.JSONDecodeError:
-            display_internal_error_message(f"JSON decoding error; Habit data file at \"{HAB_TRACE_FPATH}\" may have been tampered with.")
+            echo_internal_failure(
+                f"JSON decoding error; Habit data file at \"{HAB_TRACE_FPATH}\" may have been tampered with.")
             sys.exit(1)
         except KeyError:
-            display_internal_error_message(f"There exists at least one key within the habit data that is no longer accessible.")
+            echo_internal_failure(f"There exists at least one key within the habit data that is no longer accessible.")
             sys.exit(1)
 
         else:
             # Write new data to .json file
             with open(HAB_TRACE_FPATH, 'w') as fh:
                 json.dump(data, fh, indent=HAB_JSON_IND)
-
 
     def create_record(self):
         '''
@@ -118,16 +116,16 @@ class HabiterUpdater:
 
         # Determine if user data file exists
         if not os.path.isfile(HAB_TRACE_FPATH):
-            #.. if not, create it
+            # .. if not, create it
             with open(HAB_TRACE_FPATH, 'w') as fh:
-            # Initalize JSON arrays to hold JSON objects
+                # Initalize JSON arrays to hold JSON objects
                 initFileContents = {
-                            "util": {
-                             "version": HABITER_VERSION,
-                             "last_logged": date.datetime.now().strftime(HAB_DATE_FORMAT)
-                            },
-                            "habits": []
-                            }
+                    "util": {
+                        "version": HABITER_VERSION,
+                        "last_logged": date.datetime.now().strftime(HAB_DATE_FORMAT)
+                    },
+                    "habits": []
+                }
 
             with open(HAB_TRACE_FPATH, 'w') as fh:
                 json.dump(initFileContents, fh, indent=HAB_JSON_IND)

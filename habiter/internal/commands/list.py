@@ -4,7 +4,7 @@ import click
 
 import habiter.internal.math as habmath
 from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_DATE_FORMAT
-from habiter.internal.utils.messenger import display_message
+from habiter.internal.utils.messenger import echo_success, echo_info
 
 
 @click.command(short_help='list all habits on record')
@@ -53,4 +53,4 @@ def list_verbose(data:dict) -> None:
         print(f"  | Last updated:\t\t\t{deltaDay} day(s) ago")
         print("  | Date added:\t\t\t\t{}\n".format(habit["date_info"]["date_added"]))
     print("-------------------\t\t\t-----")
-    display_message("Note: More data captured = increased statistical accuracy!\n")
+    echo_info("Note: More data captured = increased statistical accuracy!\n")
