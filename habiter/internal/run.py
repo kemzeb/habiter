@@ -6,12 +6,12 @@
 
 import habiter.internal.cli as cli
 
-from habiter.internal.habiter import Habiter
+from habiter.internal.upkeep.updater import HabiterUpdater
 
 
 def main():
-    parser = cli.create_parser()
-    cli.exe_using_parser(Habiter(), parser)
+    HabiterUpdater()
+    cli.habiter()
 
 
 if __name__ == "__main__":

@@ -35,3 +35,15 @@ def display_wrap_message(text:str, addHeader=True):
                             width = 70,
                             initial_indent = "\t",
                             subsequent_indent = "\t\t") )
+
+
+def inquire_choice(choice:str):
+    display_message(f"Are you sure you want to {choice}? This cannot be undone.\n")
+    ans = ''
+    while True:
+        ans = input("[Provide a y/n.]: ")
+
+        if ans != "y" and ans != "n":
+            print("[err: INQUIRE_CHOICE] Please try again.")
+        else:
+            return True if ans == 'y' else False

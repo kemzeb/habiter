@@ -16,7 +16,7 @@ from habiter.internal.utils.messenger import (
     display_internal_error_message
 )
 from habiter.internal.utils.consts import (
-    HAB_AUTHOR,     #..here to will handle Windows file structure... yuck
+    HAB_AUTHOR,
     HAB_DIR_FPATH,
     HAB_TRACE_FPATH,
     HABITER_VERSION,
@@ -35,14 +35,14 @@ class HabiterUpdater:
 
 
     def update_habiter(self):
-        '''
+        """
         Updates habit data based on user activity
 
         This method will update all the habit data if it detects
         that the date it was last logged has passed a certain
         wait period (i.e. if a day has passed). It updates just once
-        and waits for habiter to be exectued once again that will meet
-        this target condtion.
+        and waits for habiter to be executed once again that will meet
+        this target condition.
 
         Note that it will update the following keys if needed:
             prev_occ    n_trials
@@ -51,7 +51,7 @@ class HabiterUpdater:
 
         The following is always updated upon execution:
             last_logged
-        '''
+        """
 
         try:
             with open(HAB_TRACE_FPATH, 'r') as fh:
