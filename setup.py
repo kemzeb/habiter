@@ -5,7 +5,7 @@ from habiter.internal.utils.consts import HABITER_VERSION
 
 directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(directory, 'README.md'), encoding='utf-8') as f:
-  long_description = f.read()
+    long_description = f.read()
 
 setuptools.setup(
     name="habiter",
@@ -14,29 +14,27 @@ setuptools.setup(
     author="Kemal Zebari",
     url="https://github.com/kemzeb/habiter",
     license="MIT",
-    keywords= (
+    keywords=(
         "productivity",
         "cli"
     ),
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=setuptools.find_packages(),
-    package_data = {
-        "habiter.data": ["trace.txt"],
-    },
 
     install_requires=(
-        'appdirs'
+        'appdirs',
+        'click',
     ),
 
-    entry_points= {
+    entry_points={
         "console_scripts": [
             "habiter=habiter.internal.run:main"
         ]
     },
-    classifiers = [
+    classifiers=[
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3"
     ],
-    python_requires =">=3.8"
+    python_requires=">=3.8"
 )
