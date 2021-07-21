@@ -30,7 +30,6 @@ If you cloned the repo, use the following (assuming 'python3' is your __global p
 
 `python3 -m habiter.internal.run`
 
-Each time a command is called, no matter what else is passed into it (i.e. subcommands, options), a `Habiter` object is created to facilitate user-data interaction along with a `HabiterUpdater` object that updates the JSON file depending on user activity. Now let's take a look into the following subcommands offered:
 ```
 ➜  habiter -h
 [habiter]  Last accessed: 15 Jan, 1505 1:21AM
@@ -48,7 +47,7 @@ Commands:
   list    list all habits on record
   remove  delete habit(s) from record
   reset   reset some habit(s) from record
-  tally   reset some habit(s) from record
+  tally   increment the number of occurrences for some habit(s)
 
   For more information, visit the code repository at
   https://github.com/kemzeb/habiter.

@@ -4,10 +4,10 @@ import click
 
 from habiter.internal.commands.utils import search_record_for_habit
 from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_JSON_IND, HAB_DATE_FORMAT
-from habiter.internal.utils.messenger import echo_failure, echo_success, echo_warning
+from habiter.internal.utils.messenger import echo_failure, echo_success
 
 
-@click.command(short_help='reset some habit(s) from record')
+@click.command(short_help='increment the number of occurrences for some habit(s)')
 @click.argument('habits', required=True, nargs=-1)
 @click.option('-n', '--num', default=1)
 @click.option('-z', '--zero', is_flag=True)
