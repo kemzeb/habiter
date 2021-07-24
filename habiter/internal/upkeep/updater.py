@@ -14,11 +14,11 @@ import habiter.internal.math as habmath
 from habiter.internal.utils.messenger import (
     echo_internal_failure, echo_info
 )
+from habiter import __version__
 from habiter.internal.utils.consts import (
     HAB_AUTHOR,
     HAB_DIR_FPATH,
     HAB_TRACE_FPATH,
-    HABITER_VERSION,
     HAB_DEFAULT_FPATH,
     HAB_DATE_FORMAT,
     HAB_JSON_IND
@@ -56,7 +56,7 @@ class HabiterUpdater:
                 data = json.load(fh)
 
             # Update current date and version
-            data["util"]["version"] = HABITER_VERSION
+            data["util"]["version"] = __version__
 
             loggedTime = date.datetime.strptime(data["util"]["last_logged"],
                                                 HAB_DATE_FORMAT).date()
@@ -121,7 +121,7 @@ class HabiterUpdater:
                 # Initalize JSON arrays to hold JSON objects
                 initFileContents = {
                     "util": {
-                        "version": HABITER_VERSION,
+                        "version": __version__,
                         "last_logged": date.datetime.now().strftime(HAB_DATE_FORMAT)
                     },
                     "habits": []

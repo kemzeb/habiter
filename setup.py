@@ -1,15 +1,21 @@
-import os
 import setuptools
 
-from habiter.internal.utils.consts import HABITER_VERSION
 
-directory = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(directory, 'README.md'), encoding='utf-8') as f:
+def get_version(rel_path: str) -> str:
+    with open(rel_path, 'r') as f:
+        for line in f:
+            if line.startswith('__version__'):
+                version = line.split('=')[1].strip(' \'')
+                return version
+        raise RuntimeError('Unable to find version string')
+
+
+with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
 setuptools.setup(
     name="habiter",
-    version=HABITER_VERSION,
+    version=get_version('habiter/__init__.py'),
     description="Quantifies and keeps tabs on unwanted habits.",
     author="Kemal Zebari",
     url="https://github.com/kemzeb/habiter",
