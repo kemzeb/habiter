@@ -5,7 +5,8 @@ def get_version(rel_path: str) -> str:
     with open(rel_path, 'r') as f:
         for line in f:
             if line.startswith('__version__'):
-                version = line.split('=')[1].strip(' \'')
+                delim = '"' if '"' in line else "'"
+                version = line.split(delim)[1]
                 return version
         raise RuntimeError('Unable to find version string')
 
