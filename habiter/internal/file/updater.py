@@ -4,35 +4,35 @@
 '   Handles updating user habit data
 """
 
+import datetime as date
 import json
 import sys
-import datetime as date
-import os
+from abc import ABC, abstractmethod
 
 import habiter.internal.math as habmath
-
-from habiter.internal.utils.messenger import (
-    echo_internal_failure, echo_info
-)
 from habiter import __version__
 from habiter.internal.utils.consts import (
-    HAB_AUTHOR,
-    HAB_DIR_FPATH,
     HAB_TRACE_FPATH,
-    HAB_DEFAULT_FPATH,
     HAB_DATE_FORMAT,
     HAB_JSON_IND
 )
+from habiter.internal.utils.messenger import (
+    echo_internal_failure, echo_info
+)
 
 
-class HabiterUpdater:
-    def __init__(self):
-        self.date = date.datetime.now()
+class AbstractFileUpdater(ABC):
+    """Abstract class that provides file updating behaviors"""
 
-        self.create_record()  # Ensures user habit data to communicate with
-        self.update_habiter()  # Updates habiter when needed
+    @abstractmethod
+    def update(self, f_path: str) -> None:
+        """Abstract method that updates the contents of a file"""
+        pass
 
-    def update_habiter(self):
+
+class JSONDataFileUpdater(AbstractFileUpdater):
+
+    def update(self, f_path: str) -> None:
         """
         Updates habit data based on user activity
 
@@ -54,7 +54,12 @@ class HabiterUpdater:
         try:
             with open(HAB_TRACE_FPATH, 'r') as fh:
                 data = json.load(fh)
+        except json.JSONDecodeError:
+            echo_internal_failure(
+                f"JSON decoding error; Habit data file at \"{HAB_TRACE_FPATH}\" has failed to decode.")
+            sys.exit(1)
 
+        else:
             # Update current date and version
             data["util"]["version"] = __version__
 
@@ -67,16 +72,14 @@ class HabiterUpdater:
                 return
             # Else habit data has NOT been updated
             else:
-                # Inform end user when habiter was last accessed AND update last logged to now
                 echo_info("Last accessed: {}\n".format(data["util"]["last_logged"]))
-                data["util"]["last_logged"] = self.date.strftime(HAB_DATE_FORMAT)
+                data["util"]["last_logged"] = date.datetime.now().strftime(HAB_DATE_FORMAT)
 
                 # Compare present date to each last updated habit
                 for habit in data["habits"]:
                     # Has the habit been recently active
                     if habit["date_info"]["active"] is True:
-                        habitDate = date.datetime.strptime( \
-                            habit["date_info"]["last_updated"], HAB_DATE_FORMAT).date()
+                        habitDate = date.datetime.strptime(habit["date_info"]["last_updated"], HAB_DATE_FORMAT).date()
 
                         # Has the date stored in this habit object already passed
                         if habitDate < presentTime:
@@ -87,45 +90,6 @@ class HabiterUpdater:
                             habit["avg"] = habmath.avg(habit["total_occ"],
                                                        habit["n_trials"])
                             habit["occ"] = 0
-        except json.JSONDecodeError:
-            echo_internal_failure(
-                f"JSON decoding error; Habit data file at \"{HAB_TRACE_FPATH}\" may have been tampered with.")
-            sys.exit(1)
-        except KeyError:
-            echo_internal_failure(f"There exists at least one key within the habit data that is no longer accessible.")
-            sys.exit(1)
-
-        else:
-            # Write new data to .json file
-            with open(HAB_TRACE_FPATH, 'w') as fh:
-                json.dump(data, fh, indent=HAB_JSON_IND)
-
-    def create_record(self):
-        '''
-            Creates a user habit data file path; creates a path to an OS's user
-            data directory using the 'appdirs' module to find it in the first
-            place.
-        '''
-        # Determine if user data directory exists
-        if not os.path.isdir(HAB_DIR_FPATH):
-            if sys.platform == 'win32':
-                # Join OS user data path with HAB_AUTHOR directory
-                os.mkdir(os.path.join(HAB_DEFAULT_FPATH, HAB_AUTHOR))
-            # Add 'habiter' directory to path
-            os.mkdir(HAB_DIR_FPATH)
-
-        # Determine if user data file exists
-        if not os.path.isfile(HAB_TRACE_FPATH):
-            # .. if not, create it
-            with open(HAB_TRACE_FPATH, 'w') as fh:
-                # Initalize JSON arrays to hold JSON objects
-                initFileContents = {
-                    "util": {
-                        "version": __version__,
-                        "last_logged": date.datetime.now().strftime(HAB_DATE_FORMAT)
-                    },
-                    "habits": []
-                }
-
-            with open(HAB_TRACE_FPATH, 'w') as fh:
-                json.dump(initFileContents, fh, indent=HAB_JSON_IND)
+                # Write new data to .json file
+                with open(HAB_TRACE_FPATH, 'w') as fh:
+                    json.dump(data, fh, indent=HAB_JSON_IND)
