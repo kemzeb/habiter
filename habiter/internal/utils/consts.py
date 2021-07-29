@@ -7,8 +7,8 @@ HAB_JSON_IND = 2
 
 # Data retrieval
 HAB_NAME = 'habiter'
-HAB_AUTHOR = 'kemzeb'
-HAB_FDATA = 'records.json'
+HAB_AUTHOR = 'Habiter'
+HAB_FDATA = 'records.db'
 
 # TODO: Probably should not consider file paths as constants, especially down the line when new features are implemented
 HAB_DIR_FPATH = user_data_dir(HAB_NAME, HAB_AUTHOR)

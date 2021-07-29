@@ -4,31 +4,32 @@ the creation of files used to r/w data
 """
 
 import os
-import datetime as date
 import json
-import appdirs
+import sqlite3
+from datetime import datetime
 
 from abc import ABC, abstractmethod
 
 from habiter import __version__
 
 from habiter.internal.utils.consts import HAB_DATE_FORMAT, HAB_JSON_IND
+from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 class AbstractFileCreator(ABC):
     """An abstract class that defines file creation behaviors"""
 
     def create(self, dir_path: str, f_name: str) -> None:
-        """Creates a file with directory path that is also created if needed
+        """Creates a file with a directory path that is also recursively created if needed
 
         Parameters
         ----------
         dir_path: str
-            The directory path in which the file will reside
+            The directory path in which the created file will reside
         f_name: str
-            The name of the file
+            The name of the file to be created
         """
-        # Determine if user data directory exists
+        # Does the path exist
         if not os.path.isdir(dir_path):
             os.makedirs(dir_path)
 
@@ -48,7 +49,48 @@ class AbstractFileCreator(ABC):
         pass
 
 
+class SQLiteDataFileCreator(AbstractFileCreator):
+    def _init_file(self, f_path: str) -> None:
+
+        with SQLiteDataFileOperations(f_path) as fop:
+            # Create META_INFO table
+            fop.cur.execute('''
+            CREATE TABLE meta_info
+            (meta_id        INTEGER  PRIMARY KEY AUTOINCREMENT,          
+                version        TEXT             NOT NULL,
+                last_logged    TEXT             NOT NULL
+            )
+            ''')
+            # Create HABIT table
+            fop.cur.execute('''
+                    CREATE TABLE habit
+                    (
+                        habit_id       INTEGER  PRIMARY KEY AUTOINCREMENT,
+                        habit_name     TEXT              NOT NULL,
+                        curr_tally     INT               NOT NULL,
+                        total_tally    INT               NOT NULL,
+                        num_of_trials  INT               NOT NULL,
+                        wait_period    INT               NULL,
+                        is_active      BOOLEAN           NOT NULL,
+                        last_updated   TEXT              NOT NULL,
+                        date_added     TEXT              NOT NULL,
+                        prev_tally     INT               NULL
+                    )
+                    ''')
+            # Initialize META_INFO table
+            fop.cur.execute('INSERT INTO meta_info(version, last_logged) '
+                            'VALUES (?, ?)',
+                            (__version__,
+                             datetime.now().strftime(HAB_DATE_FORMAT)))
+
+
 class JSONDataFileCreator(AbstractFileCreator):
+    """Concrete class that was that hold the original creation logic for the habiter data file.
+
+    This will most likely be removed in future iterations but will be kept
+    in case configuration files are introduced and the logic can be utilized
+    in a similar manner.
+    """
 
     def _init_file(self, f_path: str) -> None:
         with open(f_path, 'w') as f:
@@ -56,7 +98,7 @@ class JSONDataFileCreator(AbstractFileCreator):
             initFileContents = {
                 "util": {
                     "version": __version__,
-                    "last_logged": date.datetime.now().strftime(HAB_DATE_FORMAT)
+                    "last_logged": datetime.now().strftime(HAB_DATE_FORMAT)
                 },
                 "habits": []
             }

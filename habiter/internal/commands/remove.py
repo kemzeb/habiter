@@ -1,10 +1,9 @@
 import sys
 import click
-import json
 
-from habiter.internal.commands.utils import search_record_for_habit
-from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_JSON_IND
+from habiter.internal.utils.consts import HAB_TRACE_FPATH
 from habiter.internal.utils.messenger import inquire_choice, echo_failure, echo_success
+from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 @click.command(short_help='delete habit(s) from record')
@@ -17,22 +16,16 @@ def remove(habits):
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
-    # Read up-to-date record
-    with open(HAB_TRACE_FPATH, 'r') as fh:
-        data = json.load(fh)
+    with SQLiteDataFileOperations(HAB_TRACE_FPATH) as fop:
 
-        if len(data["habits"]) < 1:
-            echo_failure("Cannot delete from an empty habit list.")
-        else:
-            for arg in habits:
-                index = search_record_for_habit(arg, data)
+        for habit_name in habits:
+            fop.cur.execute('SELECT habit_id FROM habit WHERE habit_name=?',
+                            (habit_name,))
+            row = fop.cur.fetchone()
 
-                if index != None:
-                    data["habits"].pop(index)  # Remove dict from "habits" list
-                    echo_success(f"Habit \"{arg}\" has been deleted.")
-                else:
-                    echo_failure(f"No habit with the name \"{arg}\".")
-
-       # Write new data to .json file
-        with open(HAB_TRACE_FPATH, 'w') as fh:
-            json.dump(data, fh, indent=HAB_JSON_IND)
+            if row is None:
+                echo_failure(f"No habit with the name \"{habit_name}\".")
+            else:
+                fop.cur.execute('DELETE FROM habit WHERE habit_id=?',
+                                (row['habit_id'],))
+                echo_success(f"Habit \"{habit_name}\" has been deleted.")

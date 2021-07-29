@@ -1,9 +1,9 @@
 import click
-import json
+from datetime import datetime
 
-from habiter.internal.commands.utils import init_habit, search_record_for_habit
-from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_JSON_IND
+from habiter.internal.utils.consts import HAB_DATE_FORMAT, HAB_TRACE_FPATH
 from habiter.internal.utils.messenger import echo_success, echo_failure
+from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 @click.command(short_help='add new habit(s) into record')
@@ -12,19 +12,22 @@ def add(habits):
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
-    with open(HAB_TRACE_FPATH, 'r') as fh:
-        data = json.load(fh)
+    with SQLiteDataFileOperations(HAB_TRACE_FPATH) as fop:
 
-    for arg in habits:
-        # Search habit data for duplicates
-        index = search_record_for_habit(arg, data)
-
-        if index is None:
-            newHabitObj = init_habit(arg)
-            data["habits"].append(newHabitObj)
-            echo_success(f"Habit \"{arg}\" has been added.")
-        else:
-            echo_failure(f"Habit \"{arg}\" already exists.")
-
-    with open(HAB_TRACE_FPATH, 'w') as fh:
-        json.dump(data, fh, indent=HAB_JSON_IND)
+        # TODO: Instead of invoking a query on each habit_name, try to use one query for all habits
+        for habit_name in habits:
+            fop.cur.execute('SELECT curr_tally, prev_tally, is_active, '
+                            'last_updated, num_of_trials FROM habit WHERE '
+                            'habit_name=?', (habit_name,))
+            row = fop.cur.fetchone()
+            if row is not None:
+                echo_failure(f"Habit \"{habit_name}\" already exists.")
+                continue
+            curr_time = datetime.now().strftime(HAB_DATE_FORMAT)
+            fop.cur.execute(
+                'INSERT INTO habit (habit_name, curr_tally, '
+                'total_tally, num_of_trials, wait_period, is_active, '
+                'last_updated, date_added) '
+                'VALUES(?, 0, 0, 0, 0, False, ?, ?)',
+                (habit_name, curr_time, curr_time))
+            echo_success(f"Habit \"{habit_name}\" has been added.")

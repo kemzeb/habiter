@@ -1,10 +1,9 @@
-import json
-import datetime as date
 import click
+from datetime import datetime
 
-from habiter.internal.commands.utils import search_record_for_habit
-from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_JSON_IND, HAB_DATE_FORMAT
+from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_DATE_FORMAT
 from habiter.internal.utils.messenger import echo_failure, echo_success
+from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 @click.command(short_help='increment the number of occurrences for some habit(s)')
@@ -15,37 +14,33 @@ def tally(habits, num, zero):
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
-    # Read up-to-date record
-    with open(HAB_TRACE_FPATH, 'r') as fh:
-        data = json.load(fh)
+    with SQLiteDataFileOperations(HAB_TRACE_FPATH) as fop:
+        for habit_name in habits:
+            fop.cur.execute('SELECT habit_id, curr_tally, total_tally '
+                            'FROM habit WHERE habit_name=?',
+                            (habit_name,))
+            row = fop.cur.fetchone()
 
-    for arg in habits:
-        index = search_record_for_habit(arg, data)  # search for index matching current habit name
+            if row is not None:
+                if zero and row['curr_tally'] > 0:
+                    echo_failure(
+                        f"Habit \"{habit_name}\" contains occurrences.")
+                    continue
+                prev_tally = row['curr_tally']
+                curr_tally = row['curr_tally'] + num
+                total_tally = row['total_tally'] + num
+                is_active = True
+                last_updated = datetime.now().strftime(HAB_DATE_FORMAT)
 
-        if index is not None:
-            # Check it the '--zero' flag has been used and has there already been tallies captured
-            if zero and data["habits"][index]["occ"] > 0:
-                echo_failure(f"Habit \"{arg}\" contains occurrences.")
-                continue
-
-            # Update habit data
-            habit = data["habits"][index]
-            habit["prev_occ"] = habit["occ"]  # Capture previous tally
-            habit["occ"] += num
-            habit["total_occ"] += num
-
-            # Update date information
-            habit["date_info"]["last_updated"] = f"{date.datetime.now().strftime(HAB_DATE_FORMAT)}"
-            habit["date_info"]["active"] = True
-
-            data["habits"][index] = habit
-
-            echo_success("Habit \"{}\" tally updated from {} to {}.".format(arg,
-                                                                            habit["prev_occ"],
-                                                                            habit["occ"]))
-        else:
-            echo_failure(f"Habit \"{arg}\" does not exist.")
-
-    # Write new data to .json file
-    with open(HAB_TRACE_FPATH, 'w') as fh:
-        json.dump(data, fh, indent=HAB_JSON_IND)
+                fop.cur.execute('UPDATE habit SET curr_tally=?, '
+                                'total_tally=?, is_active=?, '
+                                'last_updated=?, prev_tally=? '
+                                'WHERE habit_id = ?',
+                                (curr_tally, total_tally, is_active,
+                                 last_updated, prev_tally, row['habit_id']))
+                echo_success("Habit \"{}\" tally updated from {} to {}."
+                             .format(habit_name,
+                                     prev_tally,
+                                     curr_tally))
+            else:
+                echo_failure(f"No habit with the name \"{habit_name}\".")

@@ -1,36 +1,35 @@
 import sys
 import click
-import json
+from datetime import datetime
 
-from habiter.internal.commands.utils import search_record_for_habit, init_habit
-from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_JSON_IND
+from habiter.internal.utils.consts import HAB_DATE_FORMAT, HAB_TRACE_FPATH
 from habiter.internal.utils.messenger import inquire_choice, echo_success, echo_failure
+from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 @click.command(short_help='reset some habit(s) from record')
 @click.argument('habits', required=True, nargs=-1)
 def reset(habits):
-    # Cast to set to remove possible duplicates
-    habits = set(habits)
-
     # Confirm end user choice
     if inquire_choice("reset some habit(s)") is False:
         sys.exit(0)
 
-    # Read up-to-date record
-    with open(HAB_TRACE_FPATH, 'r') as fh:
-        data = json.load(fh)
+    # Cast to set to remove possible duplicates
+    habits = set(habits)
 
-    for arg in habits:
-        index = search_record_for_habit(arg, data)
+    with SQLiteDataFileOperations(HAB_TRACE_FPATH) as fop:
 
-        if index != None:
-            dateAdded = data["habits"][index]["date_info"]["date_added"]
-            data["habits"][index] = init_habit(arg, dateAdded)
+        for habit_name in habits:
+            fop.cur.execute('SELECT habit_id FROM habit WHERE habit_name=?',
+                            (habit_name,))
+            row = fop.cur.fetchone()
 
-            echo_success(f"Habit \"{arg}\" has been reset.")
-        else:
-            echo_failure(f"No habit with the name \"{arg}\".")
-
-    with open(HAB_TRACE_FPATH, 'w') as fh:
-        json.dump(data, fh, indent=HAB_JSON_IND)
+            if row is None:
+                echo_failure(f"No habit with the name \"{habit_name}\".")
+            else:
+                fop.cur.execute('UPDATE habit SET curr_tally = 0, '
+                                'total_tally = 0, num_of_trials = 0, '
+                                'wait_period = 0, is_active = False, '
+                                'last_updated = ?, prev_tally = NULL',
+                                (datetime.now().strftime(HAB_DATE_FORMAT),))
+                echo_success(f"Habit \"{habit_name}\" has been reset.")
