@@ -6,13 +6,13 @@
 
 habiter quantifies and keeps track of unwanted habits you have developed over time. It is interacted with in a place where all programmers or simple travelers within the world of computing feel are most familiar with: the shell.
 
-It essentially addresses the problem we have of ridding ourselves of bad habits by making it out in the open for us to see explicitly by essentially tracking the number of occurrences we notice with our habits per day. This data can then be viewed at any time as well manipulated by habiter with particular math concepts (i.e Poisson approximation, average percent change, etc.) to provide better insight into these habits.
+It essentially addresses the problem we have of ridding ourselves of bad habits by making it out in the open for us to see explicitly by tracking the number of occurrences we notice with our habits per day. This data can then be viewed at any time as well manipulated by habiter with particular math concepts (i.e Poisson approximation, average percent change, etc.) to provide better insight into these habits.
 
 
 ## Features
 * CLI interaction using the `click` library
-* Addition, deletion, updating of habits through the cooperation of a json file
-* Persistent data storage onto your local machine; your data is yours to own and use alone
+* Addition, deletion, updating of habits through the cooperation of the `sqlite3` library
+* Persistent data storage onto your local machine; your data is **yours** to own and use **alone**
 * Poisson probability utilized to act upon data (more mathematical concepts to come)
 * Ability to print summary information of your habits
 
@@ -26,7 +26,7 @@ Alternatively, you can __clone the repository__, though all interaction must tak
 ## Usage
 If you installed habiter with pip, simply call `habiter` anywhere within the shell to interact with the command line interface.
 
-If you cloned the repo, use the following (assuming 'python3' is your __global path variable__ and your on the project root directory):
+If you cloned the repo, use the following (assuming 'python3' is your __global path variable__ and your in the project root directory):
 
 `python3 -m habiter.internal.run`
 
@@ -89,9 +89,8 @@ Habit + Attributes                    Value
 
 
 ## Essential To Do's
-* Shift from json R/W to sqlite3 R/W for better optimization and abstraction
 * Add ability to change the "wait period" or the time it takes before some habit is updated
 * Research into and implement testing procedures
+* Implement an undo manager class that accounts for alterations made to the database
 * Provide extended documentation within the repo
 * Implement more math concepts that work nicely with the data under consideration
-* Possibly consider creating a GUI variant
