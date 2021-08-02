@@ -11,12 +11,11 @@ jobs:
     strategy:
       matrix:
         runs-on: [ubuntu-latest, macos-latest, windows-latest]
-        py-version: [3.8, 3.9]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.py-version }}
+          python-version: 3.9
       - name: Ensure pip is up-to-date
         shell: bash
         run: |
@@ -27,4 +26,4 @@ jobs:
         shell: bash
         run: |
           pip install -e .
-          ${{ env.PY_MODULE_ENTRY_SCRIPT }} --version
+          ${{ env.PY_MODULE_ENTRY_SCRIPT }} add test
