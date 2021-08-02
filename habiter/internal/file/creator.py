@@ -85,7 +85,7 @@ class SQLiteDataFileCreator(AbstractFileCreator):
 
 
 class JSONDataFileCreator(AbstractFileCreator):
-    """Concrete class that was that hold the original creation logic for the habiter data file.
+    """Concrete class that held the original creation logic for the habiter data file.
 
     This will most likely be removed in future iterations but will be kept
     in case configuration files are introduced and the logic can be utilized
