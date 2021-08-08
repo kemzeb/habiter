@@ -1,14 +1,26 @@
+"""This file provides the file operation logic for the files habiter
+utilizes (e.g. using the context manager to reduce boilerplate project-wide)
+"""
+
 import sqlite3
-from abc import ABC
+from abc import ABC, abstractmethod
 from habiter.internal.utils.consts import HAB_DATE_FORMAT
 
 
 class AbstractFileOperations(ABC):
-    """Abstract class that provides operations to be conducted on a file
+    """Abstract base class for file operations
     """
 
     def __init__(self, f_path: str):
         self.f_path = f_path
+
+    @abstractmethod
+    def __enter__(self):
+        pass
+
+    @abstractmethod
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
 
 class SQLiteDataFileOperations(AbstractFileOperations):
