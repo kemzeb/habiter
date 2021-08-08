@@ -1,17 +1,22 @@
 import sqlite3
-import datetime
+from abc import ABC
 from habiter.internal.utils.consts import HAB_DATE_FORMAT
 
 
-class SQLiteDataFileOperations:
-    """Concrete class that defines database file operations with SQLite
-
-    This class is mainly used throughout the codebase that requires access
-    to the database file as a context manager to reduce boilerplate
+class AbstractFileOperations(ABC):
+    """Abstract class that provides operations to be conducted on a file
     """
 
     def __init__(self, f_path: str):
         self.f_path = f_path
+
+
+class SQLiteDataFileOperations(AbstractFileOperations):
+    """Concrete class that provides database file operations with SQLite
+    """
+
+    def __init__(self, f_path: str):
+        super().__init__(f_path)
         self.con = None
         self.cur = None
 
