@@ -60,7 +60,7 @@ This is what is printed out after the `-h` option is requested (just typing `hab
 `tally` subcommand allows for the incrementation of the occurrence of one or more habits that exists within the data. It keeps track of daily and total habit occurrence (aka 'tallies') day by day. It holds the following options:
 
 - `-z, --zero` for informing habiter that you have had no occurrences for that day for some habit(s)
-- `-n, --num ` for providing a particular number of occurrences for that day for some habit(s) (**please note that** it applies to all habits that you currently inputted)
+- `-n, --num` for providing a particular number of occurrences for that day for some habit(s) (**please note that** it applies to all habits that you currently inputted)
 
 The reason why the `-z, --zero` option exists in the first place is because habiter has no way of telling whether a habit that has **zero occurrences** has been recently active, has never been active before, or has been inactive for a while. It simply informs habiter that this or a collection of particular habits should be considered `active` on that day. **If you add onto the occurrences** in any way afterward you won't find any trouble, however, this argument may **no longer be used** for that day.
 
