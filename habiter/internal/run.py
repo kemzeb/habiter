@@ -19,7 +19,7 @@ from habiter.internal.utils.consts import (
 def main():
     data_file_creator = SQLiteDataFileCreator(HAB_DIR_FPATH, HAB_FDATA)
     data_file_creator.create()
-    data_file_path = data_file_creator.get_data_file_path()
+    data_file_path = data_file_creator.get_data_f_path()
 
     # Instantiate singleton for operations conducted on data file
     SQLiteDataFileOperations(data_file_path)
