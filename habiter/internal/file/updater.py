@@ -32,7 +32,7 @@ class AbstractFileUpdater(ABC):
 class SQLiteDataFileUpdater(AbstractFileUpdater):
     def update(self) -> None:
 
-        with SQLiteDataFileOperations.the() as fo:
+        with SQLiteDataFileOperations() as fo:
             fo.cur.execute('SELECT * FROM meta_info')
             # There should be a single row from the meta_info table
             row = fo.cur.fetchone()

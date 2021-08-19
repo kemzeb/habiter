@@ -14,7 +14,7 @@ def tally(habits, num, zero):
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
-    with SQLiteDataFileOperations.the() as fo:
+    with SQLiteDataFileOperations() as fo:
         for habit_name in habits:
             fo.cur.execute('SELECT habit_id, curr_tally, total_tally '
                            'FROM habit WHERE habit_name=?',

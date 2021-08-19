@@ -12,7 +12,7 @@ def add(habits):
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
-    with SQLiteDataFileOperations.the() as fo:
+    with SQLiteDataFileOperations() as fo:
 
         # TODO: Instead of invoking a query on each habit_name, try to use one query for all habits
         for habit_name in habits:

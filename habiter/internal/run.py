@@ -24,8 +24,8 @@ def main():
     data_file_creator.create()
     data_file_path = data_file_creator.get_data_f_path()
 
-    # Instantiate singleton for operations conducted on data file
-    SQLiteDataFileOperations(data_file_path)
+    # Set the data file path that all classes using this can have access to
+    SQLiteDataFileOperations().set_f_path(data_file_path)
 
     data_file_updater = SQLiteDataFileUpdater(data_file_path)
     data_file_updater.update()

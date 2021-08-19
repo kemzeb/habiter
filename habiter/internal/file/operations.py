@@ -7,26 +7,20 @@ from abc import ABC, abstractmethod
 
 
 class AbstractFileOperations(ABC):
-    """Abstract base singleton class for file operations.
+    """Abstract base class for file operations. 
+
+    Instances of this class all share the __f_path static variable which can
+    only be retrieved or set by the getter and setter class methods
     """
-    __the = None
-    __data_f_path = None
+    __f_path = None
 
     @classmethod
-    def the(cls):
-        """Getter that refers to the singleton"""
-        return cls.__the
+    def get_f_path(cls) -> str:
+        return cls.__f_path
 
     @classmethod
-    def data_f_path(cls) -> str:
-        return cls.__data_f_path
-
-    def __init__(self, data_f_path: str):
-        if AbstractFileOperations.__the is not None:
-            raise RuntimeError('This class utilizes the singleton pattern.')
-        else:
-            AbstractFileOperations.__the = self
-            AbstractFileOperations.__data_f_path = data_f_path
+    def set_f_path(cls, f_path) -> None:
+        cls.__f_path = f_path
 
     @abstractmethod
     def __enter__(self):
@@ -41,13 +35,12 @@ class SQLiteDataFileOperations(AbstractFileOperations):
     """Concrete class that provides database file operations using SQLite
     """
 
-    def __init__(self, data_f_path: str):
-        super().__init__(data_f_path)
+    def __init__(self):
         self.con = None
         self.cur = None
 
     def __enter__(self):
-        self.con = sqlite3.connect(SQLiteDataFileOperations.data_f_path())
+        self.con = sqlite3.connect(SQLiteDataFileOperations.get_f_path())
         # Allow having returned rows to map column names to values using
         # sqlite3.Row
         self.con.row_factory = sqlite3.Row

@@ -17,7 +17,7 @@ def reset(habits):
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
-    with SQLiteDataFileOperations.the() as fo:
+    with SQLiteDataFileOperations() as fo:
 
         for habit_name in habits:
             fo.cur.execute('SELECT habit_id FROM habit WHERE habit_name=?',
