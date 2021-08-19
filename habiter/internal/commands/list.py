@@ -3,7 +3,7 @@ import click
 
 import habiter.internal.math as habmath
 from habiter.internal.file.operations import SQLiteDataFileOperations
-from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_DATE_FORMAT
+from habiter.internal.utils.consts import HAB_DATE_FORMAT
 from habiter.internal.utils.messenger import echo_success, echo_info
 
 

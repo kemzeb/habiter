@@ -1,7 +1,7 @@
 import click
 from datetime import datetime
 
-from habiter.internal.utils.consts import HAB_TRACE_FPATH, HAB_DATE_FORMAT
+from habiter.internal.utils.consts import HAB_DATE_FORMAT
 from habiter.internal.utils.messenger import echo_failure, echo_success
 from habiter.internal.file.operations import SQLiteDataFileOperations
 

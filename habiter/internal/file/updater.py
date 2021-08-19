@@ -7,20 +7,13 @@
 
 import json
 import sys
-import sqlite3
 from datetime import datetime
 from abc import ABC, abstractmethod
 
-import habiter.internal.math as habmath
 from habiter import __version__
-from habiter.internal.utils.consts import (
-    HAB_TRACE_FPATH,
-    HAB_DATE_FORMAT,
-    HAB_JSON_IND
-)
-from habiter.internal.utils.messenger import (
-    echo_internal_failure, echo_info
-)
+from habiter.internal.utils.consts import HAB_DATE_FORMAT
+
+from habiter.internal.utils.messenger import echo_info
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
 

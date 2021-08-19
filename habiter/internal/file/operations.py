@@ -4,7 +4,6 @@ utilizes (e.g. using the context manager to reduce boilerplate project-wide)
 
 import sqlite3
 from abc import ABC, abstractmethod
-from habiter.internal.utils.consts import HAB_DATE_FORMAT
 
 
 class AbstractFileOperations(ABC):

@@ -1,18 +1,7 @@
-import os
-
-from appdirs import user_data_dir
-
 HAB_DATE_FORMAT = "%d %b, %Y %H:%M%p"
 HAB_JSON_IND = 2
 
 # Data retrieval
 HAB_NAME = 'habiter'
-HAB_AUTHOR = 'Habiter'
-HAB_FDATA = 'records.db'
-
-# TODO: Probably should not consider file paths as constants, especially down the line when new features are implemented
-HAB_DIR_FPATH = user_data_dir(HAB_NAME, HAB_AUTHOR)
-# .. full path without user habit data file
-
-HAB_TRACE_FPATH = os.path.join(HAB_DIR_FPATH, HAB_FDATA)
-# .. full path with user habit data included
+HAB_AUTHOR = 'Habiter'  # for appdirs library
+HAB_F_RECORD_NAME = 'records.db'

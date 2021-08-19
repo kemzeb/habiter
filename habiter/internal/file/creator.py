@@ -6,13 +6,11 @@ the creation of files used to r/w data
 import os
 import json
 import sqlite3
-from appdirs import user_data_dir
 from datetime import datetime
 from abc import ABC, abstractmethod
 
 from habiter import __version__
-from habiter.internal.utils.consts import (
-    HAB_AUTHOR, HAB_DATE_FORMAT, HAB_FDATA, HAB_JSON_IND)
+from habiter.internal.utils.consts import HAB_DATE_FORMAT, HAB_JSON_IND
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
 

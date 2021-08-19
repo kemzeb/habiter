@@ -1,8 +1,9 @@
 import sys
 import click
 
-from habiter.internal.utils.consts import HAB_TRACE_FPATH
-from habiter.internal.utils.messenger import inquire_choice, echo_failure, echo_success
+from habiter.internal.utils.messenger import (
+    inquire_choice, echo_failure, echo_success
+)
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
