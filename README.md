@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/kemzeb/habiter/main/docs/img/HABITER.jpg" height = 350 width = 500>
+<img src="https://raw.githubusercontent.com/kemzeb/habiter/main/docs/img/habiter.gif" height = 180 width = 450>
 </p>
 
 ---
