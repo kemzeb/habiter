@@ -11,9 +11,9 @@ from habiter.internal.utils.messenger import echo_success, echo_info
 @click.option('-v', '--verbose', is_flag=True, default=False)
 def list(verbose):
 
-    with SQLiteDataFileOperations(HAB_TRACE_FPATH) as fop:
-        data = fop.cur.execute('SELECT * FROM habit').fetchall()
-        meta_data = fop.cur.execute('SELECT last_logged FROM meta_info') \
+    with SQLiteDataFileOperations.the() as fo:
+        data = fo.cur.execute('SELECT * FROM habit').fetchall()
+        meta_data = fo.cur.execute('SELECT last_logged FROM meta_info') \
             .fetchone()
 
     if not verbose:

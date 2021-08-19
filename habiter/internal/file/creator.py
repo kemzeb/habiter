@@ -6,20 +6,29 @@ the creation of files used to r/w data
 import os
 import json
 import sqlite3
+from appdirs import user_data_dir
 from datetime import datetime
-
 from abc import ABC, abstractmethod
 
 from habiter import __version__
-
-from habiter.internal.utils.consts import HAB_DATE_FORMAT, HAB_JSON_IND
+from habiter.internal.utils.consts import (
+    HAB_AUTHOR, HAB_DATE_FORMAT, HAB_FDATA, HAB_JSON_IND, HAB_NAME,
+    HAB_CONFIG_FNAME)
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 class AbstractFileCreator(ABC):
     """An abstract class that defines file creation behaviors"""
 
-    def create(self, dir_path: str, f_name: str) -> None:
+    def __init__(self, dir_path: str, f_name: str):
+        self.dir_path = dir_path
+        self.f_name = f_name
+        self.data_file_path = os.path.join(self.dir_path, self.f_name)
+
+    def get_data_file_path(self) -> str:
+        return self.data_file_path
+
+    def create(self) -> None:
         """Creates a file with a directory path that is also recursively created if needed
 
         Parameters
@@ -30,15 +39,14 @@ class AbstractFileCreator(ABC):
             The name of the file to be created
         """
         # Does the path exist
-        if not os.path.isdir(dir_path):
-            os.makedirs(dir_path)
+        if not os.path.isdir(self.dir_path):
+            os.makedirs(self.dir_path)
 
-        data_file_path = os.path.join(dir_path, f_name)
-        if not os.path.isfile(data_file_path):
-            self._init_file(data_file_path)
+        if not os.path.isfile(self.data_file_path):
+            self._init_file(self.data_file_path)
 
     @abstractmethod
-    def _init_file(self, f_path: str) -> None:
+    def _init_file(self) -> None:
         """Abstract method that creates and initializes the contents of a file
 
         Parameters
@@ -50,11 +58,11 @@ class AbstractFileCreator(ABC):
 
 
 class SQLiteDataFileCreator(AbstractFileCreator):
-    def _init_file(self, f_path: str) -> None:
+    def _init_file(self) -> None:
 
-        with SQLiteDataFileOperations(f_path) as fop:
+        with SQLiteDataFileOperations(self.f_path) as fo:
             # Create META_INFO table
-            fop.cur.execute('''
+            fo.cur.execute('''
             CREATE TABLE meta_info
             (meta_id        INTEGER  PRIMARY KEY AUTOINCREMENT,          
                 version        TEXT             NOT NULL,
@@ -62,7 +70,7 @@ class SQLiteDataFileCreator(AbstractFileCreator):
             )
             ''')
             # Create HABIT table
-            fop.cur.execute('''
+            fo.cur.execute('''
                     CREATE TABLE habit
                     (
                         habit_id       INTEGER  PRIMARY KEY AUTOINCREMENT,
@@ -78,10 +86,10 @@ class SQLiteDataFileCreator(AbstractFileCreator):
                     )
                     ''')
             # Initialize META_INFO table
-            fop.cur.execute('INSERT INTO meta_info(version, last_logged) '
-                            'VALUES (?, ?)',
-                            (__version__,
-                             datetime.now().strftime(HAB_DATE_FORMAT)))
+            fo.cur.execute('INSERT INTO meta_info(version, last_logged) '
+                           'VALUES (?, ?)',
+                           (__version__,
+                            datetime.now().strftime(HAB_DATE_FORMAT)))
 
 
 class JSONDataFileCreator(AbstractFileCreator):

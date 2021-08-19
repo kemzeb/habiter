@@ -14,12 +14,12 @@ def tally(habits, num, zero):
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
-    with SQLiteDataFileOperations(HAB_TRACE_FPATH) as fop:
+    with SQLiteDataFileOperations.the() as fo:
         for habit_name in habits:
-            fop.cur.execute('SELECT habit_id, curr_tally, total_tally '
-                            'FROM habit WHERE habit_name=?',
-                            (habit_name,))
-            row = fop.cur.fetchone()
+            fo.cur.execute('SELECT habit_id, curr_tally, total_tally '
+                           'FROM habit WHERE habit_name=?',
+                           (habit_name,))
+            row = fo.cur.fetchone()
 
             if row is not None:
                 if zero and row['curr_tally'] > 0:
@@ -32,12 +32,12 @@ def tally(habits, num, zero):
                 is_active = True
                 last_updated = datetime.now().strftime(HAB_DATE_FORMAT)
 
-                fop.cur.execute('UPDATE habit SET curr_tally=?, '
-                                'total_tally=?, is_active=?, '
-                                'last_updated=?, prev_tally=? '
-                                'WHERE habit_id = ?',
-                                (curr_tally, total_tally, is_active,
-                                 last_updated, prev_tally, row['habit_id']))
+                fo.cur.execute('UPDATE habit SET curr_tally=?, '
+                               'total_tally=?, is_active=?, '
+                               'last_updated=?, prev_tally=? '
+                               'WHERE habit_id = ?',
+                               (curr_tally, total_tally, is_active,
+                                last_updated, prev_tally, row['habit_id']))
                 echo_success("Habit \"{}\" tally updated from {} to {}."
                              .format(habit_name,
                                      prev_tally,

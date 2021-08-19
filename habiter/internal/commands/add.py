@@ -12,19 +12,19 @@ def add(habits):
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
-    with SQLiteDataFileOperations(HAB_TRACE_FPATH) as fop:
+    with SQLiteDataFileOperations.the() as fo:
 
         # TODO: Instead of invoking a query on each habit_name, try to use one query for all habits
         for habit_name in habits:
-            fop.cur.execute('SELECT curr_tally, prev_tally, is_active, '
-                            'last_updated, num_of_trials FROM habit WHERE '
-                            'habit_name=?', (habit_name,))
-            row = fop.cur.fetchone()
+            fo.cur.execute('SELECT curr_tally, prev_tally, is_active, '
+                           'last_updated, num_of_trials FROM habit WHERE '
+                           'habit_name=?', (habit_name,))
+            row = fo.cur.fetchone()
             if row is not None:
                 echo_failure(f"Habit \"{habit_name}\" already exists.")
                 continue
             curr_time = datetime.now().strftime(HAB_DATE_FORMAT)
-            fop.cur.execute(
+            fo.cur.execute(
                 'INSERT INTO habit (habit_name, curr_tally, '
                 'total_tally, num_of_trials, wait_period, is_active, '
                 'last_updated, date_added) '
