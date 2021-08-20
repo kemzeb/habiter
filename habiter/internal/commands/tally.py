@@ -22,10 +22,18 @@ def tally(habits, num, zero):
             row = fo.cur.fetchone()
 
             if row is not None:
-                if zero and row['curr_tally'] > 0:
-                    echo_failure(
-                        f"Habit \"{habit_name}\" contains occurrences.")
+                if zero:
+                    if row['curr_tally'] > 0:
+                        echo_failure(
+                            f"Habit \"{habit_name}\" contains occurrences.")
+                    else:
+                        fo.cur.execute('UPDATE habit SET is_active=? '
+                                       'WHERE habit_id=?',
+                                       (True, row['habit_id']))
+                        echo_success(
+                            f'Habit \"{habit_name}\" marked as active.')
                     continue
+
                 prev_tally = row['curr_tally']
                 curr_tally = row['curr_tally'] + num
                 total_tally = row['total_tally'] + num
