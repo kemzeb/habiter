@@ -3,6 +3,7 @@ This file contains implementations involving
 the creation of files used to r/w data
 """
 
+import pathlib
 import os
 import json
 import sqlite3
@@ -11,18 +12,17 @@ from abc import ABC, abstractmethod
 
 from habiter import __version__
 from habiter.internal.utils.consts import HAB_DATE_FORMAT, HAB_JSON_IND
-from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 class AbstractFileCreator(ABC):
     """An abstract class that defines file creation behaviors"""
 
     def __init__(self, dir_path: str, f_name: str):
-        self.dir_path = dir_path
+        self.dir_path = pathlib.Path(dir_path)
         self.f_name = f_name
-        self.data_f_path = os.path.join(self.dir_path, self.f_name)
+        self.data_f_path = self.dir_path / self.f_name
 
-    def get_data_f_path(self) -> str:
+    def get_data_f_path(self) -> pathlib.Path:
         return self.data_f_path
 
     def create(self) -> None:
@@ -35,11 +35,11 @@ class AbstractFileCreator(ABC):
         f_name: str
             The name of the file to be created
         """
-        # Does the path exist
-        if not os.path.isdir(self.dir_path):
-            os.makedirs(self.dir_path)
+        # Does the child directory exist
+        if not self.dir_path.exists():
+            self.dir_path.mkdir(parents=True)
 
-        if not os.path.isfile(self.data_f_path):
+        if not self.data_f_path.exists():
             self._init_file()
 
     @abstractmethod

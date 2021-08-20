@@ -2,6 +2,7 @@
 utilizes (e.g. using the context manager to reduce boilerplate project-wide)
 """
 
+import pathlib
 import sqlite3
 from abc import ABC, abstractmethod
 
@@ -12,10 +13,10 @@ class AbstractFileOperations(ABC):
     Instances of this class all share the __f_path static variable which can
     only be retrieved or set by the getter and setter class methods
     """
-    __f_path = None
+    __f_path: pathlib.Path = None
 
     @classmethod
-    def get_f_path(cls) -> str:
+    def get_f_path(cls) -> pathlib.Path:
         return cls.__f_path
 
     @classmethod

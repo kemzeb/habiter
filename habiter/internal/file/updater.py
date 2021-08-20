@@ -6,7 +6,7 @@
 
 
 import json
-import sys
+import pathlib
 from datetime import datetime
 from abc import ABC, abstractmethod
 
@@ -20,7 +20,7 @@ from habiter.internal.file.operations import SQLiteDataFileOperations
 class AbstractFileUpdater(ABC):
     """Abstract class that provides file updating behaviors"""
 
-    def __init__(self, f_path: str) -> None:
+    def __init__(self, f_path: pathlib.Path) -> None:
         self.f_path = f_path
 
     @abstractmethod
