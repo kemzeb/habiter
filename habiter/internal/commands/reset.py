@@ -2,18 +2,18 @@ import sys
 import click
 from datetime import datetime
 
+from ._utils import abort_if_false
 from habiter.internal.utils.consts import HAB_DATE_FORMAT
-from habiter.internal.utils.messenger import inquire_choice, echo_success, echo_failure
+from habiter.internal.utils.messenger import echo_success, echo_failure
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 @click.command(short_help='reset some habit(s) from record')
 @click.argument('habits', required=True, nargs=-1)
+@click.option('--yes', is_flag=True, callback=abort_if_false,
+              expose_value=False,
+              prompt='Are you sure you want to reset habit(s) from record?')
 def reset(habits):
-    # Confirm end user choice
-    if inquire_choice("reset some habit(s)") is False:
-        sys.exit(0)
-
     # Cast to set to remove possible duplicates
     habits = set(habits)
 

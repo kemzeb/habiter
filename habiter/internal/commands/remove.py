@@ -1,19 +1,19 @@
 import sys
 import click
 
+from ._utils import abort_if_false
 from habiter.internal.utils.messenger import (
-    inquire_choice, echo_failure, echo_success
+    echo_failure, echo_success
 )
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 @click.command(short_help='delete habit(s) from record')
 @click.argument('habits', required=True, nargs=-1)
+@click.option('--yes', is_flag=True, callback=abort_if_false,
+              expose_value=False,
+              prompt='Are you sure you want to delete habit(s) from record?')
 def remove(habits):
-    # Confirm user choice
-    if inquire_choice("make a deletion") is False:
-        sys.exit(0)
-
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
