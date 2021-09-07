@@ -14,6 +14,8 @@ from habiter.internal.file.operations import SQLiteDataFileOperations
               expose_value=False,
               prompt='Are you sure you want to reset habit(s) from record?')
 def reset(habits):
+    non_existing_habit_detected = False
+
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
@@ -26,6 +28,7 @@ def reset(habits):
 
             if row is None:
                 echo_failure(f"No habit with the name \"{habit_name}\".")
+                non_existing_habit_detected = True
             else:
                 fo.cur.execute('UPDATE habit SET curr_tally = 0, '
                                'total_tally = 0, num_of_trials = 0, '
@@ -35,3 +38,6 @@ def reset(habits):
                                (datetime.now().strftime(HAB_DATE_FORMAT),
                                 row['habit_id']))
                 echo_success(f"Habit \"{habit_name}\" has been reset.")
+
+        if non_existing_habit_detected:
+            sys.exit(1)

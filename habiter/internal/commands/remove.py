@@ -14,6 +14,8 @@ from habiter.internal.file.operations import SQLiteDataFileOperations
               expose_value=False,
               prompt='Are you sure you want to delete habit(s) from record?')
 def remove(habits):
+    non_existing_habit_detected = False
+
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
@@ -26,7 +28,11 @@ def remove(habits):
 
             if row is None:
                 echo_failure(f"No habit with the name \"{habit_name}\".")
+                non_existing_habit_detected = True
             else:
                 fo.cur.execute('DELETE FROM habit WHERE habit_id=?',
                                (row['habit_id'],))
                 echo_success(f"Habit \"{habit_name}\" has been deleted.")
+
+        if non_existing_habit_detected:
+            sys.exit(1)

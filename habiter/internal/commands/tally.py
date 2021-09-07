@@ -1,3 +1,4 @@
+import sys
 import click
 from datetime import datetime
 
@@ -11,6 +12,8 @@ from habiter.internal.file.operations import SQLiteDataFileOperations
 @click.option('-n', '--num', default=1)
 @click.option('-z', '--zero', is_flag=True)
 def tally(habits, num, zero):
+    flag = False
+
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
@@ -26,6 +29,7 @@ def tally(habits, num, zero):
                     if row['curr_tally'] > 0:
                         echo_failure(
                             f"Habit \"{habit_name}\" contains occurrences.")
+                        flag = True
                     else:
                         fo.cur.execute('UPDATE habit SET is_active=? '
                                        'WHERE habit_id=?',
@@ -52,3 +56,7 @@ def tally(habits, num, zero):
                                      curr_tally))
             else:
                 echo_failure(f"No habit with the name \"{habit_name}\".")
+                flag = True
+
+        if flag:
+            sys.exit(1)

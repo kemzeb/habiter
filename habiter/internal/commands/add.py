@@ -1,3 +1,4 @@
+import sys
 import click
 from datetime import datetime
 
@@ -9,6 +10,8 @@ from habiter.internal.file.operations import SQLiteDataFileOperations
 @click.command(short_help='add new habit(s) into record')
 @click.argument('habits', required=True, nargs=-1)
 def add(habits):
+    existing_habit_detected = False
+
     # Cast to set to remove possible duplicates
     habits = set(habits)
 
@@ -21,6 +24,7 @@ def add(habits):
                            'habit_name=?', (habit_name,))
             row = fo.cur.fetchone()
             if row is not None:
+                existing_habit_detected = True
                 echo_failure(f"Habit \"{habit_name}\" already exists.")
                 continue
             curr_time = datetime.now().strftime(HAB_DATE_FORMAT)
@@ -31,3 +35,6 @@ def add(habits):
                 'VALUES(?, 0, 0, 0, 0, False, ?, ?)',
                 (habit_name, curr_time, curr_time))
             echo_success(f"Habit \"{habit_name}\" has been added.")
+
+        if existing_habit_detected:
+            sys.exit(1)
