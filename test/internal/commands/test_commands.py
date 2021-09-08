@@ -45,10 +45,10 @@ def test_add(setup):
         assert rows[0]['habit_name'] in ['t0', 't1']
         assert rows[1]['habit_name'] in ['t0', 't1']
 
-        # Add habit that already exists on record)
+        # Add habit that already exists on record
         runner.invoke(habiter, ['add', 't2'])
         result = runner.invoke(habiter, ['add', 't2'])
-        assert result.exit_code == 0
+        assert result.exit_code == 1
 
         fo.cur.execute('SELECT habit_name FROM habit '
                        'WHERE habit_name = "t2"')
@@ -93,7 +93,7 @@ def test_remove(setup):
     with SQLiteDataFileOperations() as fo:
         # Remove habit from an empty record
         result = runner.invoke(habiter, ['remove', '--yes', 't0'])
-        assert result.output == '[habiter: error]  No habit with the name "t0".\n'
+        assert result.exit_code == 1
 
         # Remove habit that exists on record
         runner.invoke(habiter, ['add', 't0'])
@@ -110,7 +110,7 @@ def test_tally(setup):
     with SQLiteDataFileOperations() as fo:
         # Tally habit that does not exist on record
         result = runner.invoke(habiter, ['tally', 't0'])
-        assert result.output == '[habiter: error]  No habit with the name "t0".\n'
+        assert result.exit_code == 1
 
         # Tally habit that does exist on record
         runner.invoke(habiter, ['add', 't0'])
@@ -141,7 +141,7 @@ def test_tally(setup):
 
         # Use the '-z/--zero' option' but the habit has already been active
         result = runner.invoke(habiter, ['tally', '-z', 't1'])
-        assert result.output == '[habiter: error]  Habit "t1" contains occurrences.\n'
+        assert result.exit_code == 1
 
 
 def test_reset(setup):
@@ -151,7 +151,7 @@ def test_reset(setup):
     with SQLiteDataFileOperations() as fo:
         # Reset habit that does not exist on record
         result = runner.invoke(habiter, ['reset', '--yes', 't0'])
-        assert result.output == '[habiter: error]  No habit with the name "t0".\n'
+        assert result.exit_code == 1
 
         # Reset habit that exists on record
         runner.invoke(habiter, ['add', 't0'])
