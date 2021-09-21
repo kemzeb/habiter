@@ -45,11 +45,6 @@ class AbstractFileCreator(ABC):
     @abstractmethod
     def _init_file(self) -> None:
         """Abstract method that creates and initializes the contents of a file
-
-        Parameters
-        ----------
-        f_path: str
-            File path to the file that is to be created
         """
         pass
 
