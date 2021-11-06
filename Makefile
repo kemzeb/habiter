@@ -1,19 +1,25 @@
 ### Pip package building
+.PHONY: setup clean
+setup:		
+		python3 setup.py sdist bdist_wheel
+
 .PHONY: test-release
-test-release: 	cleandist
-			python3 setup.py sdist bdist_wheel
+test-release: 	clean setup
 			python3 -m twine upload --repository testpypi dist/* 
 			
 
-.PHONY: cleandist
-cleandist: 			
+.PHONY: clean
+clean: 			
 			if [ -d "dist" ]; then \
 				rm -r "dist"; \
 			fi
+			
+			if [ -d "build" ]; then \
+				rm -r "build/"; \
+			fi
 
 .PHONY: release
-release: 		cleandist
-			python3 setup.py sdist bdist_wheel
+release: 		clean setup
 			python3 -m twine upload dist/*
 ## END OF Pip package building
 
