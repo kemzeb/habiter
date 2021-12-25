@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 
 
 class AbstractFileOperations(ABC):
-    """Abstract base class for file operations. 
+    """Abstract base class for file operations.
 
     Instances of this class all share the __f_path static variable which can
     only be retrieved or set by the getter and setter class methods

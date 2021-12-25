@@ -4,8 +4,6 @@
 '   The entry point of habiter
 """
 
-import os
-
 from appdirs import user_data_dir
 
 import habiter.internal.cli as cli

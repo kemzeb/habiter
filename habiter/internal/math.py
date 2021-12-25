@@ -6,23 +6,19 @@
 '
 """
 
-## NOTE: the math will need to be approved and documented, but for
-# now squaring away implementations is priority
-
-## ALSO NOTE: All the functions below are implementation details,
-#  so as of right now there exists little to no type checking
-
 import math
 import sys
 
 from habiter.internal.utils.messenger import echo_failure
 
 
+# TODO: Introduce more math-related logic into the system!
+
 def neumaier_sum(summ, val):
     raise NotImplementedError
 
 
-def avg_percent_delta(avg1:float, avg2:float, time=1):
+def avg_percent_delta(avg1: float, avg2: float, time=1):
     """ Computes the average percent change
         for some function of time, expressed
         as a percentage (though it returns a
@@ -50,7 +46,7 @@ def avg_percent_delta(avg1:float, avg2:float, time=1):
         sys.exit(1)
 
 
-def avg(summation, nTrials:int):
+def avg(summation, nTrials: int):
     try:
         return summation / nTrials
     except ZeroDivisionError:
@@ -60,20 +56,20 @@ def avg(summation, nTrials:int):
 
 # Unused function, needs to be tested
 def running_avg(avg, newVal, nTrials):
-    old_avg = avg * (nTrials-1)
-    return old_avg + ( (newVal - old_avg) / nTrials )
+    old_avg = avg * (nTrials - 1)
+    return old_avg + ((newVal - old_avg) / nTrials)
 
 
-def poisson_prob(lmda, x:int):
+def poisson_prob(lmda, x: int):
     """ Computes the probability for a discrete random
         variable using the Poisson probability
     Parameters
         lmda:   the lambda parameter
         x:      a discete event that is observed (i.e. for occurrence(s))
     """
-    return (math.e) ** (-lmda) * ( (lmda**x) / math.factorial(x) )
+    return (math.e) ** (-lmda) * ((lmda ** x) / math.factorial(x))
 
 
 if __name__ == "__main__":
-    #print(avg(summation=5, nTrials=2))
-    print(avg_percent_delta(4,8))
+    # print(avg(summation=5, nTrials=2))
+    print(avg_percent_delta(4, 8))

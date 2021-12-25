@@ -38,8 +38,7 @@ def list(habits, verbose):
             print(habit["habit_name"])
         print("-------------------")
     else:
-        curr_day = datetime.strptime(
-            meta_data["last_logged"], HAB_DATE_FORMAT).date()
+        curr_day = datetime.strptime(meta_data["last_logged"], HAB_DATE_FORMAT).date()
         print("Habit + Attributes\t\t\tValue")
         print("-------------------\t\t\t-----")
         for habit in data:
@@ -69,7 +68,6 @@ def print_verbose(habit: sqlite3.Row, curr_day):
     print(f"  | P(Occurrences > 1 today):\t\t{probInfo}")
     print("  | Today's daily tally:\t\t{}".format(habit['curr_tally']))
     print("  | Total tally:\t\t\t{}".format(habit['total_tally']))
-    print("  | # of days captured:\t\t\t{}".format(
-        habit['num_of_trials']))
+    print("  | # of days captured:\t\t\t{}".format(habit['num_of_trials']))
     print(f"  | Last updated:\t\t\t{delta_day} day(s) ago")
     print("  | Date added:\t\t\t\t{}\n".format(habit["date_added"]))

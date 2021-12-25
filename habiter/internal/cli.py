@@ -12,6 +12,7 @@ from habiter import __version__
 def habiter():
     pass
 
+
 habiter.add_command(add.add)
 habiter.add_command(list.list)
 habiter.add_command(remove.remove)

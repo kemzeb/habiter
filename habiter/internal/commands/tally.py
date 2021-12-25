@@ -27,8 +27,7 @@ def tally(habits, num, zero):
             if row is not None:
                 if zero:
                     if row['curr_tally'] > 0:
-                        echo_failure(
-                            f"Habit \"{habit_name}\" contains occurrences.")
+                        echo_failure(f"Habit \"{habit_name}\" contains occurrences.")
                         flag = True
                     else:
                         fo.cur.execute('UPDATE habit SET is_active=? '

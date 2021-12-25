@@ -4,7 +4,6 @@ the creation of files used to r/w data
 """
 
 import pathlib
-import os
 import json
 import sqlite3
 from datetime import datetime
@@ -49,7 +48,7 @@ class SQLiteDataFileCreator(AbstractFileCreator):
         # Create META_INFO table
         con.execute('''
         CREATE TABLE meta_info
-        (meta_id        INTEGER  PRIMARY KEY AUTOINCREMENT,          
+        (meta_id        INTEGER  PRIMARY KEY AUTOINCREMENT,
             version        TEXT             NOT NULL,
             last_logged    TEXT             NOT NULL
         )
