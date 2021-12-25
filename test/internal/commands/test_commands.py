@@ -70,11 +70,11 @@ def test_list(setup):
     result = None
 
     with SQLiteDataFileOperations() as fo:
-        # Print with empty record)
+        # Print with empty record
         result = runner.invoke(habiter, ['list'])
         assert result.exit_code == 0
 
-        # Print with habits in record)
+        # Print with habits in record
         runner.invoke(habiter, ['add', 't0', 't1'])
         result = runner.invoke(habiter, ['list'])
         assert result.exit_code == 0
@@ -84,6 +84,16 @@ def test_list(setup):
         assert result.exit_code == 0
         result = runner.invoke(habiter, ['list', '--verbose'])
         assert result.exit_code == 0
+
+        # Provide existing habits as positional arguments
+        result = runner.invoke(habiter, ['list', 't0', 't1', '-v'])
+        assert result.exit_code == 0
+        assert '[t0]' in result.output
+
+        # Provide non-existing habits as positional arguments
+        result = runner.invoke(habiter, ['list', 't1', 't99', '-v'])
+        assert result.exit_code == 1
+        assert '[t1]' in result.output
 
 
 def test_remove(setup):
