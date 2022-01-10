@@ -17,7 +17,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 setuptools.setup(
     name="habiter",
     version=get_version('habiter/__init__.py'),
-    description="Quantifies and keeps tabs on unwanted habits.",
+    description="Quantifiy and keep tabs on habits.",
     author="Kemal Zebari",
     url="https://github.com/kemzeb/habiter",
     license="MIT",
