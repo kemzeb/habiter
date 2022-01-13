@@ -4,16 +4,16 @@
 
 ---
 
-habiter quantifies and keeps track of unwanted habits you have developed over time. It is interacted within a place where all programmers or simple travelers within the world of computing feel are most familiar with: the shell.
+habiter quantifies and keeps track of habits within the command line.
 
-It essentially addresses the problem we have of ridding ourselves of bad habits by making it out in the open for us to see explicitly by tracking the number of occurrences we notice with our habits per day. This data can then be viewed at any time as well manipulated by habiter with particular math concepts (i.e Poisson approximation, average percent change, etc.) to provide better insight into these habits.
+It essentially addresses the problem of managing our habits (whether good or bad) by making it out in the open for us to see by simply tracking the number of occurrences we notice with our habits per day. This data can then be viewed at any time as well manipulated by using particular math concepts (e.g. Poisson approximation) to provide some means to visualize these habits.
 
 ## Features
 
-- CLI interaction using the `click` library
+- CLI interaction using the [click](https://github.com/pallets/click) library
 - Addition, deletion, updating of habits through the cooperation of the `sqlite3` library
-- Persistent data storage onto your local machine; your data is **yours** to own and use **alone**
-- Poisson probability utilized to act upon data (more mathematical concepts to come)
+- Persistent data storage onto ***your local machine***; your data is **yours** to own and use **alone**
+- Poisson probability is utilized to act upon your data (more mathematical concepts to come)
 - Ability to print summary information of your habits
 
 ## Installation
@@ -22,11 +22,19 @@ It essentially addresses the problem we have of ridding ourselves of bad habits 
 
 Alternatively, you can **clone the repository**, though all interaction must take place at the root directory of the repo (usage explained below for both).
 
+## To Do's
+
+- [ ] Provide a configuration command to allow, as one may guess, the ability to configure habiter
+- [ ] "Pretty" up the list command print-outs ([rich](https://github.com/Textualize/rich) looks pretty neat!)
+- [ ] Implement an "undoing" feature to restore the habit record to previous states 
+- [ ] Add ability to change the "wait period" of habits; e.g. having habits update hourly rather than just daily
+- [ ] Introduce more math concepts that work nicely with the data under consideration
+
 ## Usage
 
-If you installed habiter with pip, simply call `habiter` anywhere within the shell to interact with the command-line interface.
+If you installed habiter with pip, simply call `habiter` anywhere to get started.
 
-If you cloned the repo, use the following (assuming 'python3' is your **global path variable** and you're in the project root directory):
+If you cloned the repo, use the following (assuming you're in the project root directory and 'python3' command is your Python intrepreter):
 
 `python3 -m habiter.internal.run`
 
@@ -57,30 +65,30 @@ This is what is printed out after the `-h` option is requested (just typing `hab
 
 #
 
-`tally` subcommand allows for the incrementation of the occurrence of one or more habits that exists within the data. It keeps track of daily and total habit occurrence (aka 'tallies') day by day. It holds the following options:
+`tally` subcommand allows for incrementing the occurrence of one or more habits that exists within the record. It keeps track of daily and total habit occurrence (aka 'tallies') day by day. It holds the following options:
 
-- `-z, --zero` for informing habiter that you have had no occurrences for that day for some habit(s)
+- `-z, --zero` for informing habiter that you have had no tallies for that day for some habit(s)
 - `-n, --num` for providing a particular number of occurrences for that day for some habit(s) (**please note that** it applies to all habits that you currently inputted)
 
-The reason why the `-z, --zero` option exists in the first place is because habiter has no way of telling whether a habit that has **zero occurrences** has been recently active, has never been active before, or has been inactive for a while. It simply informs habiter that this or a collection of particular habits should be considered `active` on that day. **If you add onto the occurrences** in any way afterward you won't find any trouble, however, this argument may **no longer be used** for that day.
+The reason why the `-z, --zero` option exists in the first place is because habiter doesn't run as a daemon, where habit data could be updated automatically based on meeting certain time constraints. You could supply `-n 0` as input and this is essentally the same thing, but since there is a good chance that you have had no tallies for a habit on that particular day and becomes too cumbersome. The zero option simply informs habiter that the habits you supplied as input should be considered `active` today. **If you tally** afterward you won't find any trouble, however, you will exit with an error if you attempt to use this option with .
 
 #
 
-`add` subcommand allows for the addition of one or more habits into the data. Any duplicated habit names provided are ignored and/or prints an error. It initializes all habits to a default state.
+`add` subcommand allows for the addition of one or more habits into the record. If a habit already exists in the record, it will exit with an error but will not hinder the addition of any other inputted habit names.
 
 #
 
-`remove` subcommand allows for the deletion of one or more habits from the data. Habit names that do not exist within the data prints an error but will not hinder the deletion of any other inputted habit names.
+`remove` subcommand allows for the deletion of one or more habits from the record. Similar to `add`, a habit ***that does not exist*** within the record will exit with an error but will not hinder the deletion of any other inputted habit names.
 
 #
 
-`reset` subcommand allows resetting one or more habits from the data to the initial state. Recorded total and daily tallies, number of days captured, and other information will no longer exist, but the habit will remain in the record.
+`reset` subcommand allows resetting one or more habits from the record to the initial state. Recorded total and daily tallies, number of days captured, and other information will no longer exist, but the habit will remain in the record.
 
 #
 
-`list` subcommand allows for the printing of all existing habits within the data. Its functionality can be extended using the following option:
+`list` subcommand allows for the printing of all existing habits within the record. Its functionality can be extended using the following option:
 
-- `-v, --verbose` for listing all habits + their attributes within the data
+- `-v, --verbose` for listing all habits + their attributes within the record
 
 The following provides an example of this optional argument in use:
 
@@ -99,11 +107,3 @@ Habit + Attributes                    Value
 -------------------                   -----
 [habiter]  Note: More data captured = increased statistical accuracy!
 ```
-
-## Essential To Do's
-
-- Add ability to change the "wait period" or the time it takes before some habit is updated
-- Research into and implement testing procedures
-- Implement an undo manager class that accounts for alterations made to the database
-- Provide extended documentation within the repo
-- Implement more math concepts that work nicely with the data under consideration
