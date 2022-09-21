@@ -26,8 +26,8 @@ Alternatively, you can **clone the repository**, though all interaction must tak
 
 - [ ] Provide a configuration command to allow, as one may guess, the ability to configure habiter
 - [ ] "Pretty" up the list command print-outs ([rich](https://github.com/Textualize/rich) looks pretty neat!)
-- [ ] Implement an "undoing" feature to restore the habit record to previous states 
-- [ ] Add ability to change the "wait period" of habits; e.g. having habits update hourly rather than just daily
+- [ ] Implement an "undoing" feature to restore the habit record to previous states
+- [ ] Utilize a console-based GUI rather than just the CLI (something similar to [lazygit](https://github.com/jesseduffield/lazygit))
 - [ ] Introduce more math concepts that work nicely with the data under consideration
 
 ## Usage
