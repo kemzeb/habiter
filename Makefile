@@ -42,7 +42,7 @@ lint-check:
 	@echo '[habiter]  Linting for Python syntax errors or undefined names...'
 	flake8 --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=venv,dist,build .
 	@echo '[habiter]  Linting with the default error codes...'
-	flake8 --count --max-complexity=10 --max-line-length=120 --statistics --exclude=venv,dist,build .
+	flake8 --count --max-complexity=10 --max-line-length=100 --statistics --exclude=venv,dist,build .
 
 
 ### Testing
