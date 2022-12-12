@@ -70,7 +70,7 @@ This is what is printed out after the `-h` option is requested (just typing `hab
 - `-z, --zero` for informing habiter that you have had no tallies for that day for some habit(s)
 - `-n, --num` for providing a particular number of occurrences for that day for some habit(s) (**please note that** it applies to all habits that you currently inputted)
 
-The reason why the `-z, --zero` option exists in the first place is because habiter doesn't run as a daemon, where habit data could be updated automatically based on meeting certain time constraints. You could supply `-n 0` as input and this is essentally the same thing, but since there is a good chance that you have had no tallies for a habit on that particular day and becomes too cumbersome. The zero option simply informs habiter that the habits you supplied as input should be considered `active` today. **If you tally** afterward you won't find any trouble, however, you will exit with an error if you attempt to use this option with .
+The reason why the `-z, --zero` option exists in the first place is because habiter doesn't run as a daemon, where habit data could be updated automatically based on meeting certain time constraints. You could supply `-n 0` as input and this is essentally the same thing, but since there is a good chance that you have had no tallies for a habit on a particular day it becomes too cumbersome. The zero option simply informs habiter that the habits you supplied as input should be considered `active` today. **If you tally afterward** you won't find any trouble but you will exit with an error if you attempt to use this option again for that particular habit.
 
 #
 
