@@ -104,6 +104,32 @@ Habit + Attributes                    Value
   | Last updated:                     0 day(s) ago
   | Date added:                       15 Jan, 1505 1:21AM
 
+[sculpting]
+  | P(Occurrences >= 2 today):        48.854%
+  | Today's daily tally:              15
+  | Total tally:                      578
+  | # of days captured:               352
+  | Last updated:                     0 day(s) ago
+  | Date added:                       15 Jan, 1505 1:22AM
+
+-------------------                   -----
+[habiter]  Note: More data captured = increased statistical accuracy!
+```
+
+You can also be more ***specific by passing habit names***. For example:
+
+```
+➜  habiter list mirror-writing -v
+Habit + Attributes                    Value
+-------------------                   -----
+[mirror-writing]
+  | P(Occurrences >= 2 today):        91.717%
+  | Today's daily tally:              15
+  | Total tally:                      1452
+  | # of days captured:               352
+  | Last updated:                     0 day(s) ago
+  | Date added:                       15 Jan, 1505 1:21AM
+
 -------------------                   -----
 [habiter]  Note: More data captured = increased statistical accuracy!
 ```
