@@ -4,16 +4,14 @@
 '   The entry point of habiter
 """
 
-from appdirs import user_data_dir
+from platformdirs import user_data_dir
 
 import habiter.internal.cli as cli
 from habiter.internal.file.creator import SQLiteDataFileCreator
 from habiter.internal.file.updater import SQLiteDataFileUpdater
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
-from habiter.internal.utils.consts import (
-    HAB_AUTHOR, HAB_NAME, HAB_F_RECORD_NAME
-)
+from habiter.internal.utils.consts import HAB_AUTHOR, HAB_NAME, HAB_F_RECORD_NAME
 
 
 def main():

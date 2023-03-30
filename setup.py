@@ -2,48 +2,38 @@ import setuptools
 
 
 def get_version(rel_path: str) -> str:
-    with open(rel_path, 'r') as f:
+    with open(rel_path, "r") as f:
         for line in f:
-            if line.startswith('__version__'):
+            if line.startswith("__version__"):
                 delim = '"' if '"' in line else "'"
                 version = line.split(delim)[1]
                 return version
-        raise RuntimeError('Unable to find version string')
+        raise RuntimeError("Unable to find version string")
 
 
-with open('README.md', 'r', encoding='utf-8') as f:
+with open("README.md", "r", encoding="utf-8") as f:
     long_description = f.read()
 
 setuptools.setup(
     name="habiter",
-    version=get_version('habiter/__init__.py'),
+    version=get_version("habiter/__init__.py"),
     description="Quantifiy and keep tabs on habits.",
     author="Kemal Zebari",
     url="https://github.com/kemzeb/habiter",
     license="MIT",
-    keywords=(
-        "productivity",
-        "cli"
-    ),
+    keywords=("productivity", "cli"),
     long_description=long_description,
-    long_description_content_type='text/markdown',
-    packages=setuptools.find_packages(
-        exclude="test"
-    ),
-
+    long_description_content_type="text/markdown",
+    packages=setuptools.find_packages(exclude="test"),
     install_requires=(
-        'appdirs',
-        'click',
+        "black>=23.3.0",
+        "click>=8.1.3",
+        "platformdirs>=3.2.0",
     ),
-
-    entry_points={
-        "console_scripts": [
-            "habiter=habiter.internal.run:main"
-        ]
-    },
+    entry_points={"console_scripts": ["habiter=habiter.internal.run:main"]},
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3"
+        "Programming Language :: Python :: 3",
     ],
-    python_requires=">=3.8"
+    python_requires=">=3.8",
 )
