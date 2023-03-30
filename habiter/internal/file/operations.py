@@ -13,6 +13,7 @@ class AbstractFileOperations(ABC):
     Instances of this class all share the __f_path static variable which can
     only be retrieved or set by the getter and setter class methods
     """
+
     __f_path: pathlib.Path = None
 
     @classmethod
@@ -33,8 +34,7 @@ class AbstractFileOperations(ABC):
 
 
 class SQLiteDataFileOperations(AbstractFileOperations):
-    """Concrete class that provides database file operations using SQLite
-    """
+    """Concrete class that provides database file operations using SQLite"""
 
     def __init__(self):
         self.con = None

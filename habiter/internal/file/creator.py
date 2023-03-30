@@ -25,8 +25,7 @@ class AbstractFileCreator(ABC):
         return self.data_f_path
 
     def create(self) -> None:
-        """Creates a file with a directory path that is also recursively created if needed
-        """
+        """Creates a file with a directory path that is also recursively created if needed"""
         # Does the child directory exist
         if not self.dir_path.exists():
             self.dir_path.mkdir(parents=True)
@@ -36,8 +35,7 @@ class AbstractFileCreator(ABC):
 
     @abstractmethod
     def _init_file(self) -> None:
-        """Abstract method that creates and initializes the contents of a file
-        """
+        """Abstract method that creates and initializes the contents of a file"""
         pass
 
 
@@ -46,15 +44,18 @@ class SQLiteDataFileCreator(AbstractFileCreator):
         con = sqlite3.connect(self.data_f_path)
 
         # Create META_INFO table
-        con.execute('''
+        con.execute(
+            """
         CREATE TABLE meta_info
         (meta_id        INTEGER  PRIMARY KEY AUTOINCREMENT,
             version        TEXT             NOT NULL,
             last_logged    TEXT             NOT NULL
         )
-        ''')
+        """
+        )
         # Create HABIT table
-        con.execute('''
+        con.execute(
+            """
                 CREATE TABLE habit
                 (
                     habit_id       INTEGER  PRIMARY KEY AUTOINCREMENT,
@@ -68,12 +69,13 @@ class SQLiteDataFileCreator(AbstractFileCreator):
                     date_added     TEXT              NOT NULL,
                     prev_tally     INT               NULL
                 )
-                ''')
+                """
+        )
         # Initialize META_INFO table
-        con.execute('INSERT INTO meta_info(version, last_logged) '
-                    'VALUES (?, ?)',
-                    (__version__,
-                     datetime.now().strftime(HAB_DATE_FORMAT)))
+        con.execute(
+            "INSERT INTO meta_info(version, last_logged) " "VALUES (?, ?)",
+            (__version__, datetime.now().strftime(HAB_DATE_FORMAT)),
+        )
         con.commit()
         con.close()
 
@@ -87,13 +89,13 @@ class JSONDataFileCreator(AbstractFileCreator):
     """
 
     def _init_file(self, f_path: str) -> None:
-        with open(f_path, 'w') as f:
+        with open(f_path, "w") as f:
             # Initialize JSON arrays to hold JSON objects
             initFileContents = {
                 "util": {
                     "version": __version__,
-                    "last_logged": datetime.now().strftime(HAB_DATE_FORMAT)
+                    "last_logged": datetime.now().strftime(HAB_DATE_FORMAT),
                 },
-                "habits": []
+                "habits": [],
             }
             json.dump(initFileContents, f, indent=HAB_JSON_IND)

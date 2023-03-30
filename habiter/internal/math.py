@@ -14,12 +14,13 @@ from habiter.internal.utils.messenger import echo_failure
 
 # TODO: Introduce more math-related logic into the system!
 
+
 def neumaier_sum(summ, val):
     raise NotImplementedError
 
 
 def avg_percent_delta(avg1: float, avg2: float, time=1):
-    """ Computes the average percent change
+    """Computes the average percent change
         for some function of time, expressed
         as a percentage (though it returns a
         float value)
@@ -61,13 +62,13 @@ def running_avg(avg, newVal, nTrials):
 
 
 def poisson_prob(lmda, x: int):
-    """ Computes the probability for a discrete random
+    """Computes the probability for a discrete random
         variable using the Poisson probability
     Parameters
         lmda:   the lambda parameter
         x:      a discete event that is observed (i.e. for occurrence(s))
     """
-    return (math.e) ** (-lmda) * ((lmda ** x) / math.factorial(x))
+    return (math.e) ** (-lmda) * ((lmda**x) / math.factorial(x))
 
 
 if __name__ == "__main__":
