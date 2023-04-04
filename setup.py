@@ -26,7 +26,6 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(exclude="test"),
     install_requires=(
-        "black>=23.3.0",
         "click>=8.1.3",
         "platformdirs>=3.2.0",
     ),
