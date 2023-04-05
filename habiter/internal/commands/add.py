@@ -16,7 +16,6 @@ def add(habits):
     habits = set(habits)
 
     with SQLiteDataFileOperations() as fo:
-        # TODO: Instead of invoking a query on each habit_name, try to use one query for all habits
         for habit_name in habits:
             fo.cur.execute(
                 "SELECT curr_tally, prev_tally, is_active, "

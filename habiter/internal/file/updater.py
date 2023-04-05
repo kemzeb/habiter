@@ -60,7 +60,6 @@ class SQLiteDataFileUpdater(AbstractFileUpdater):
                 habit_date = datetime.strptime(
                     habit["last_updated"], HAB_DATE_FORMAT
                 ).date()
-                # TODO: implementation really inefficient but sqlite3 is challenging to use
                 if habit_date < curr_time:
                     prev_tally = 0
                     num_of_trials = habit["num_of_trials"] + 1

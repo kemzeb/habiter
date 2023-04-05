@@ -25,7 +25,8 @@ class AbstractFileCreator(ABC):
         return self.data_f_path
 
     def create(self) -> None:
-        """Creates a file with a directory path that is also recursively created if needed"""
+        """Creates a file with a directory path that is also recursively created if
+        needed"""
         # Does the child directory exist
         if not self.dir_path.exists():
             self.dir_path.mkdir(parents=True)
