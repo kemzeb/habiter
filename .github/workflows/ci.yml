@@ -19,11 +19,7 @@ jobs:
           pip install flake8 pytest
 
       - name: Lint with flake8
-        run: |
-          # Stop build for any Python syntax errors
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # Stop build if any linting errors are raised
-          flake8 . --count --max-complexity=10 --max-line-length=100 --statistics 
+        run: flake8 . --count --show-source --statistics
 
       - name: Run
         run: |
