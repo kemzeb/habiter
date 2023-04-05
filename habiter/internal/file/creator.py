@@ -4,13 +4,12 @@ the creation of files used to r/w data
 """
 
 import pathlib
-import json
 import sqlite3
 from datetime import datetime
 from abc import ABC, abstractmethod
 
 from habiter import __version__
-from habiter.internal.utils.consts import HAB_DATE_FORMAT, HAB_JSON_IND
+from habiter.internal.utils.consts import HAB_DATE_FORMAT
 
 
 class AbstractFileCreator(ABC):
@@ -79,24 +78,3 @@ class SQLiteDataFileCreator(AbstractFileCreator):
         )
         con.commit()
         con.close()
-
-
-class JSONDataFileCreator(AbstractFileCreator):
-    """Concrete class that held the original creation logic for the habiter data file.
-
-    This will most likely be removed in future iterations but will be kept
-    in case configuration files are introduced and the logic can be utilized
-    in a similar manner.
-    """
-
-    def _init_file(self, f_path: str) -> None:
-        with open(f_path, "w") as f:
-            # Initialize JSON arrays to hold JSON objects
-            initFileContents = {
-                "util": {
-                    "version": __version__,
-                    "last_logged": datetime.now().strftime(HAB_DATE_FORMAT),
-                },
-                "habits": [],
-            }
-            json.dump(initFileContents, f, indent=HAB_JSON_IND)
