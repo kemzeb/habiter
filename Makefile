@@ -4,7 +4,7 @@ setup: clean
 	python3 setup.py sdist bdist_wheel
 
 .PHONY: test-release
-test-release: clean setup
+test-release: setup
 	python3 -m twine upload --repository testpypi dist/*
 			
 
@@ -39,10 +39,8 @@ dev-run: lint-check test
 ## Linting
 .PHONY: lint-check
 lint-check:
-	@echo '[habiter]  Linting for Python syntax errors or undefined names...'
-	flake8 --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=venv,dist,build .
-	@echo '[habiter]  Linting with the default error codes...'
-	flake8 --count --max-complexity=10 --max-line-length=100 --statistics --exclude=venv,dist,build .
+	@echo '[habiter]  Linting with flake8...'
+	flake8 --count --show-source --statistics --exclude=venv,dist,build .
 
 
 ### Testing
