@@ -10,7 +10,7 @@ from datetime import datetime
 from abc import ABC, abstractmethod
 
 from habiter import __version__
-from habiter.internal.utils.consts import HAB_DATE_FORMAT
+from habiter.internal.utils.consts import DB_DATE_FORMAT
 
 from habiter.internal.utils.messenger import echo_info
 from habiter.internal.file.operations import SQLiteDataFileOperations
@@ -35,7 +35,7 @@ class SQLiteDataFileUpdater(AbstractFileUpdater):
             # There should be a single row from the meta_info table
             row = fo.cur.fetchone()
 
-            logged_time = datetime.strptime(row["last_logged"], HAB_DATE_FORMAT).date()
+            logged_time = datetime.strptime(row["last_logged"], DB_DATE_FORMAT).date()
             curr_time = datetime.now().date()
 
             # Check if habit data has already been updated
@@ -47,7 +47,7 @@ class SQLiteDataFileUpdater(AbstractFileUpdater):
             # Update row
             fo.cur.execute(
                 "UPDATE meta_info SET version=?, " "last_logged=? WHERE meta_id=?",
-                (__version__, datetime.now().strftime(HAB_DATE_FORMAT), row["meta_id"]),
+                (__version__, datetime.now().strftime(DB_DATE_FORMAT), row["meta_id"]),
             )
             # Retrieve all habit data with active column set to 'True'
             fo.cur.execute(
@@ -58,7 +58,7 @@ class SQLiteDataFileUpdater(AbstractFileUpdater):
             data = fo.cur.fetchall()
             for habit in data:
                 habit_date = datetime.strptime(
-                    habit["last_updated"], HAB_DATE_FORMAT
+                    habit["last_updated"], DB_DATE_FORMAT
                 ).date()
                 if habit_date < curr_time:
                     prev_tally = 0

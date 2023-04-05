@@ -2,7 +2,7 @@ import sys
 import click
 from datetime import datetime
 
-from habiter.internal.utils.consts import HAB_DATE_FORMAT
+from habiter.internal.utils.consts import DB_DATE_FORMAT
 from habiter.internal.utils.messenger import echo_failure, echo_success, echo_warning
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
@@ -43,7 +43,7 @@ def tally(habits, num, zero):
                 curr_tally = row["curr_tally"] + num
                 total_tally = row["total_tally"] + num
                 is_active = True
-                last_updated = datetime.now().strftime(HAB_DATE_FORMAT)
+                last_updated = datetime.now().strftime(DB_DATE_FORMAT)
 
                 fo.cur.execute(
                     "UPDATE habit SET curr_tally=?, "

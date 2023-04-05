@@ -2,7 +2,7 @@ import sys
 import click
 from datetime import datetime
 
-from habiter.internal.utils.consts import HAB_DATE_FORMAT
+from habiter.internal.utils.consts import DB_DATE_FORMAT
 from habiter.internal.utils.messenger import echo_success, echo_failure
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
@@ -28,7 +28,7 @@ def add(habits):
                 existing_habit_detected = True
                 echo_failure(f'Habit "{habit_name}" already exists.')
                 continue
-            curr_time = datetime.now().strftime(HAB_DATE_FORMAT)
+            curr_time = datetime.now().strftime(DB_DATE_FORMAT)
             fo.cur.execute(
                 "INSERT INTO habit (habit_name, curr_tally, "
                 "total_tally, num_of_trials, wait_period, is_active, "

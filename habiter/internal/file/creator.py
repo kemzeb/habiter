@@ -9,7 +9,7 @@ from datetime import datetime
 from abc import ABC, abstractmethod
 
 from habiter import __version__
-from habiter.internal.utils.consts import HAB_DATE_FORMAT
+from habiter.internal.utils.consts import DB_DATE_FORMAT
 
 
 class AbstractFileCreator(ABC):
@@ -74,7 +74,7 @@ class SQLiteDataFileCreator(AbstractFileCreator):
         # Initialize META_INFO table
         con.execute(
             "INSERT INTO meta_info(version, last_logged) " "VALUES (?, ?)",
-            (__version__, datetime.now().strftime(HAB_DATE_FORMAT)),
+            (__version__, datetime.now().strftime(DB_DATE_FORMAT)),
         )
         con.commit()
         con.close()

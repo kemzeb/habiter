@@ -6,7 +6,7 @@ import sqlite3
 
 import habiter.internal.math as habmath
 from habiter.internal.file.operations import SQLiteDataFileOperations
-from habiter.internal.utils.consts import HAB_DATE_FORMAT
+from habiter.internal.utils.consts import DB_DATE_FORMAT
 from habiter.internal.utils.messenger import echo_failure, echo_info
 
 
@@ -38,7 +38,7 @@ def list(habits, verbose):
             print(habit["habit_name"])
         print("-------------------")
     else:
-        curr_day = datetime.strptime(meta_data["last_logged"], HAB_DATE_FORMAT).date()
+        curr_day = datetime.strptime(meta_data["last_logged"], DB_DATE_FORMAT).date()
         print("Habit + Attributes\t\t\tValue")
         print("-------------------\t\t\t-----")
         for habit in data:
@@ -50,7 +50,7 @@ def list(habits, verbose):
 
 
 def print_verbose(habit: sqlite3.Row, curr_day):
-    habit_day = datetime.strptime(habit["last_updated"], HAB_DATE_FORMAT).date()
+    habit_day = datetime.strptime(habit["last_updated"], DB_DATE_FORMAT).date()
     # subtraction returns a timedelta
     delta_day = (curr_day - habit_day).days
 

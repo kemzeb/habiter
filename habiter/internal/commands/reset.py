@@ -3,7 +3,7 @@ import click
 from datetime import datetime
 
 from ._utils import abort_if_false
-from habiter.internal.utils.consts import HAB_DATE_FORMAT
+from habiter.internal.utils.consts import DB_DATE_FORMAT
 from habiter.internal.utils.messenger import echo_success, echo_failure
 from habiter.internal.file.operations import SQLiteDataFileOperations
 
@@ -40,7 +40,7 @@ def reset(habits):
                     "wait_period = 0, is_active = False, "
                     "last_updated = ?, prev_tally = NULL "
                     "WHERE habit_id=?",
-                    (datetime.now().strftime(HAB_DATE_FORMAT), row["habit_id"]),
+                    (datetime.now().strftime(DB_DATE_FORMAT), row["habit_id"]),
                 )
                 echo_success(f'Habit "{habit_name}" has been reset.')
 
