@@ -1,9 +1,12 @@
 import csv
 import os
 from abc import ABC, abstractmethod
+import pathlib
+
+from platformdirs import user_data_dir
 
 from habiter.internal.file.operations import SQLiteDataFileOperations
-from habiter.internal.utils.consts import HAB_TRACE_FPATH
+from habiter.internal.utils.consts import APP_AUTHOR, APP_NAME, DB_FILE_NAME
 
 
 # TODO: Ensure this abstraction can be extended
@@ -19,7 +22,11 @@ class AbstractDataFileExport(ABC):
 
 class CSVExport(AbstractDataFileExport):
     def export(self) -> None:
-        with SQLiteDataFileOperations(HAB_TRACE_FPATH) as fo:
+        # TODO: We should abstract fetching the DB file path to a separate class.
+        db_path = pathlib.Path(user_data_dir(APP_NAME, APP_AUTHOR)) / DB_FILE_NAME
+        SQLiteDataFileOperations.set_f_path(db_path)
+
+        with SQLiteDataFileOperations() as fo:
             # Retrieve all rows from database
             fo.cur.execute("SELECT * FROM habit")
 
