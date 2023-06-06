@@ -87,12 +87,12 @@ The reason why the `-z, --zero` option exists in the first place is because habi
 
 `list` subcommand allows for the printing of all existing habits within the record. Its functionality can be extended using the following option:
 
-- `-v, --verbose` for listing all habits + their attributes within the record
+- `-l, --less` for listing only the habit names in the record
 
-The following provides an example of this optional argument in use:
+The following provides an example of the list command in action:
 
 ```
-➜  habiter list -v
+➜  habiter list
 Habit + Attributes                    Value
 -------------------                   -----
 [mirror-writing]
@@ -118,7 +118,7 @@ Habit + Attributes                    Value
 You can also be more ***specific by passing habit names***. For example:
 
 ```
-➜  habiter list mirror-writing -v
+➜  habiter list mirror-writing
 Habit + Attributes                    Value
 -------------------                   -----
 [mirror-writing]
