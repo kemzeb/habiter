@@ -13,37 +13,36 @@ from habiter.internal.utils.consts import DB_DATE_FORMAT
 
 
 class AbstractFileCreator(ABC):
-    """An abstract class that defines file creation behaviors"""
+    """An abstract class that defines file creation behaviors."""
 
-    def __init__(self, dir_path: str, f_name: str):
+    def __init__(self, dir_path: str, name: str):
         self.dir_path = pathlib.Path(dir_path)
-        self.f_name = f_name
-        self.data_f_path = self.dir_path / self.f_name
+        self.name = name
+        self.data_file_path = self.dir_path / self.name
 
-    def get_data_f_path(self) -> pathlib.Path:
-        return self.data_f_path
+    def get_data_file_path(self) -> pathlib.Path:
+        return self.data_file_path
 
     def create(self) -> None:
         """Creates a file with a directory path that is also recursively created if
-        needed"""
-        # Does the child directory exist
+        needed."""
         if not self.dir_path.exists():
             self.dir_path.mkdir(parents=True)
 
-        if not self.data_f_path.exists():
-            self._init_file()
+        if not self.data_file_path.exists():
+            self._initialize()
 
     @abstractmethod
-    def _init_file(self) -> None:
-        """Abstract method that creates and initializes the contents of a file"""
+    def _initialize(self) -> None:
+        """Abstract method that creates and initializes the contents of a file."""
         pass
 
 
 class SQLiteDataFileCreator(AbstractFileCreator):
-    def _init_file(self) -> None:
-        con = sqlite3.connect(self.data_f_path)
+    def _initialize(self) -> None:
+        con = sqlite3.connect(self.data_file_path)
 
-        # Create META_INFO table
+        # Create META_INFO table.
         con.execute(
             """
         CREATE TABLE meta_info
@@ -53,7 +52,7 @@ class SQLiteDataFileCreator(AbstractFileCreator):
         )
         """
         )
-        # Create HABIT table
+        # Create HABIT table.
         con.execute(
             """
                 CREATE TABLE habit
@@ -71,7 +70,7 @@ class SQLiteDataFileCreator(AbstractFileCreator):
                 )
                 """
         )
-        # Initialize META_INFO table
+        # Initialize META_INFO table.
         con.execute(
             "INSERT INTO meta_info(version, last_logged) " "VALUES (?, ?)",
             (__version__, datetime.now().strftime(DB_DATE_FORMAT)),
