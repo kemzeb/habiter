@@ -1,25 +1,45 @@
 name: Lint, Run, and Test
 
-on: [push, pull_request]
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
-  lint_run_test:
-    runs-on: ${{ matrix.runs-on }}
-    strategy:
-      matrix:
-        runs-on: [ubuntu-latest, macos-latest, windows-latest]
+  lint:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
         with:
           python-version: 3.9
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest
+          pip install "flake8>=6.0.0" "black>=23.3.0"
 
       - name: Lint with flake8
         run: flake8 . --count --show-source --statistics
+
+      - name: Verify formatting with black
+        run: black . --check --diff
+
+  run_test:
+    runs-on: ${{ matrix.runs-on }}
+    needs: lint
+    strategy:
+      matrix:
+        runs-on: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "pytest>=7.2.2"
 
       - name: Run
         run: |
