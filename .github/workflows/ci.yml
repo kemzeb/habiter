@@ -17,13 +17,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install "flake8>=6.0.0" "black>=23.3.0"
+          pip install "flake8>=6.0.0" "black>=23.3.0" "isort>=5.12.0"
 
       - name: Lint with flake8
         run: flake8 . --count --show-source --statistics
 
       - name: Verify formatting with black
         run: black . --check --diff
+
+      - name: Verify import formatting with isort
+        run: isort **/*.py --check -v
 
   run_test:
     runs-on: ${{ matrix.runs-on }}
