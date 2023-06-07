@@ -1,9 +1,11 @@
 import sys
+
 import click
 
-from ._utils import abort_if_false
-from habiter.internal.utils.messenger import echo_failure, echo_success
 from habiter.internal.file.operations import SQLiteDataFileOperations
+from habiter.internal.utils.messenger import echo_failure, echo_success
+
+from ._utils import abort_if_false
 
 
 @click.command(short_help="delete habit(s) from record")

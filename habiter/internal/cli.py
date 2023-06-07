@@ -1,7 +1,7 @@
 import click
 
-from habiter.internal.commands import add, list, remove, reset, tally
 from habiter import __version__
+from habiter.internal.commands import add, list, remove, reset, tally
 
 
 @click.group(

@@ -1,11 +1,11 @@
-from datetime import datetime
+import sqlite3
 import sys
+from datetime import datetime
 
 import click
-import sqlite3
 
-from habiter.internal.math import poisson_prob
 from habiter.internal.file.operations import SQLiteDataFileOperations
+from habiter.internal.math import poisson_prob
 from habiter.internal.utils.consts import DB_DATE_FORMAT
 from habiter.internal.utils.messenger import echo_failure, echo_info
 

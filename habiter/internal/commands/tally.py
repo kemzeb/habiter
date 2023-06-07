@@ -1,10 +1,11 @@
 import sys
-import click
 from datetime import datetime
 
+import click
+
+from habiter.internal.file.operations import SQLiteDataFileOperations
 from habiter.internal.utils.consts import DB_DATE_FORMAT
 from habiter.internal.utils.messenger import echo_failure, echo_success, echo_warning
-from habiter.internal.file.operations import SQLiteDataFileOperations
 
 
 @click.command(short_help="increment the number of occurrences for some habit(s)")

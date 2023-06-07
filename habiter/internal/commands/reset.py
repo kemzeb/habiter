@@ -1,11 +1,13 @@
 import sys
-import click
 from datetime import datetime
 
-from ._utils import abort_if_false
-from habiter.internal.utils.consts import DB_DATE_FORMAT
-from habiter.internal.utils.messenger import echo_success, echo_failure
+import click
+
 from habiter.internal.file.operations import SQLiteDataFileOperations
+from habiter.internal.utils.consts import DB_DATE_FORMAT
+from habiter.internal.utils.messenger import echo_failure, echo_success
+
+from ._utils import abort_if_false
 
 
 @click.command(short_help="reset some habit(s) from record")

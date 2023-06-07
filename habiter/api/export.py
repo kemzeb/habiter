@@ -1,7 +1,7 @@
 import csv
 import os
-from abc import ABC, abstractmethod
 import pathlib
+from abc import ABC, abstractmethod
 
 from platformdirs import user_data_dir
 

@@ -6,14 +6,13 @@
 
 
 import pathlib
-from datetime import datetime
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 from habiter import __version__
-from habiter.internal.utils.consts import DB_DATE_FORMAT
-
-from habiter.internal.utils.messenger import echo_info
 from habiter.internal.file.operations import SQLiteDataFileOperations
+from habiter.internal.utils.consts import DB_DATE_FORMAT
+from habiter.internal.utils.messenger import echo_info
 
 
 class AbstractFileUpdater(ABC):

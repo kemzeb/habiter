@@ -8,9 +8,8 @@ from platformdirs import user_data_dir
 
 import habiter.internal.cli as cli
 from habiter.internal.file.creator import SQLiteDataFileCreator
-from habiter.internal.file.updater import SQLiteDataFileUpdater
 from habiter.internal.file.operations import SQLiteDataFileOperations
-
+from habiter.internal.file.updater import SQLiteDataFileUpdater
 from habiter.internal.utils.consts import APP_AUTHOR, APP_NAME, DB_FILE_NAME
 
 

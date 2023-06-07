@@ -5,8 +5,8 @@ the creation of files used to r/w data
 
 import pathlib
 import sqlite3
-from datetime import datetime
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 from habiter import __version__
 from habiter.internal.utils.consts import DB_DATE_FORMAT
